@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>T confidence interval for a mean</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">T confidence interval for a mean</h1>
+
+
+
+<p>In this vignette we’ll calculate an 88 percent confidence interval for the mean of a single sample. We’ll use the same data we use for a one-sample T-test, which was:</p>
+<p><span class="math display">\[
+  3, 7, 11, 0, 7, 0, 4, 5, 6, 2
+\]</span></p>
+<p>Recall that a confidence interval for the mean based off the T distribution is valid when:</p>
+<ol style="list-style-type: decimal">
+<li>The data comes from a normal distribution.</li>
+<li>We have lots of data. How much? Many textbooks use 30 data points as a rule of thumb.</li>
+</ol>
+<p>In the T-test example we verified that the sample seems to come from a normal distribution using a quantile-quantile plot (QQ-plot).</p>
+<p>The formula for a confidence interval with confidence coefficient <span class="math inline">\(1 - \alpha\)</span> (in our case this is 0.88) is then:</p>
+<p><span class="math display">\[
+  \left( \bar x + t_{n-1, \alpha / 2} \cdot \frac{s}{\sqrt{n}},
+  \bar x + t_{n-1, 1 - \alpha / 2} \cdot \frac{s}{\sqrt{n}} \right)
+\]</span></p>
+<p>where <span class="math inline">\(\bar x = \frac 1n \sum_{i=1}^n x_i\)</span> is the sample mean, <span class="math inline">\(t_{n-1, \alpha / 2}\)</span> is the <span class="math inline">\(\alpha / 2\)</span> lower quantile of a <span class="math inline">\(t_{n-1}\)</span> distribution, <span class="math inline">\(s = \sqrt{\frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x)^2}\)</span> is the sample standard deviation, and <span class="math inline">\(n\)</span> is the sample size. Since the T distribution is symmetric around zero, this is exactly equivalent to</p>
+<p><span class="math display">\[
+  \left( \bar x - t_{n-1, 1 - \alpha / 2} \cdot \frac{\sigma}{\sqrt{n}},
+  \bar x + t_{n-1, 1 - \alpha / 2} \cdot \frac{\sigma}{\sqrt{n}} \right)
+\]</span></p>
+<p>which may look slightly more familiar. Having trouble seeing what the difference is? Look at the subscript of the quantiles <span class="math inline">\(t\)</span>. Let’s go ahead and calculate this out in R. Since our confidence coefficient is 0.88 (corresponding to an 88 percent confidence interval) we have:</p>
+<p><span class="math display">\[
+  0.88 = 1 - \alpha
+\]</span></p>
+<p>so that <span class="math inline">\(\alpha = 0.12\)</span>. Now we can get started.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(distributions3)</a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co"># read in the data</span></a>
+<a class="sourceLine" id="cb1-4" title="4">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5">n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</a>
+<a class="sourceLine" id="cb1-6" title="6"></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co"># make T_9 random variable</span></a>
+<a class="sourceLine" id="cb1-8" title="8">T_<span class="dv">9</span> &lt;-<span class="st"> </span><span class="kw">StudentsT</span>(<span class="dt">df =</span> <span class="dv">9</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9"></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co"># first approach</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(T_<span class="dv">9</span>, <span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; [1] 2.631598</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(T_<span class="dv">9</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt; [1] 6.368402</span></a></code></pre></div>
+<p>So our confidence interval using the first set of equations is (2.63, 6.37). Now we use the second set of equations:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># second approach</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">mean</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">quantile</span>(T_<span class="dv">9</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; [1] 2.631598</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(T_<span class="dv">9</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">sd</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; [1] 6.368402</span></a></code></pre></div>
+<p>We get the same thing! Just like we expected.</p>
+<p>There’s one last thing we need to address. You may not have seen either of the formulas for a T-confidence interval that I wrote. You may have seen the formula:</p>
+<p><span class="math display">\[
+  \left( \bar x - t_{n-1, \alpha / 2} \cdot \frac{\sigma}{\sqrt{n}},
+  \bar x + t_{n-1, \alpha / 2} \cdot \frac{\sigma}{\sqrt{n}} \right)
+\]</span></p>
+<p>If this is you, you have my condolences, and your instructor probably hates you. Ask that they use lower quantile notation rather than upper quantile notation.</p>
+<p>This looks almost like the second approach, except using <span class="math inline">\(t_{n-1, \alpha / 2}\)</span> instead of <span class="math inline">\(t_{n-1, 1 - \alpha / 2}\)</span>. What this comes down to is whether or not <span class="math inline">\(t_{n-1, \alpha / 2}\)</span> represents a <em>lower quantile</em> or an <em>upper quantile</em>. For a lower quantile, you look at the p.d.f. and start integrating from negative infinity, stop when the integral equals <span class="math inline">\(\alpha\)</span>, and that take value to be the quantile. This is the only sane way to do things, although it requires being slightly more verbose so it can be inconvenient at times. Thus the upper quantile, in which case you do the same integration but start from positive infinity.</p>
+<p>The difference is easiest to understand with a picture:</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Note that <code>distributions</code> <strong>always</strong> returns a lower quantile from the <code>quantile()</code> function.</p>
+<p>If you are truly unfortunate, your instructor may use <span class="math inline">\(t_{n-1, \alpha / 2}\)</span> to mean lower tail quantiles at times and upper tail quantiles at other times. If this is the case, only god can help you.</p>
+<div id="using-the-t.test-function" class="section level2">
+<h2>Using the t.test() function</h2>
+<p>If you want to verify that your calculation is correct, R has a function <code>t.test()</code> that performs T-tests and calculates T confidence intervals for means.</p>
+<p>To get a confidence interval for a single sample, we pass <code>t.test()</code> a vector of data, and tell it the confidence coefficient (recall ours was 0.88) via the <code>conf.level</code> argument. <code>conf.level</code> defaults to 0.95, which means if we don’t specify a confidence interval we get a 95 percent confidence interval.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">t.test</span>(x, <span class="dt">conf.level =</span> <span class="fl">0.88</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt; data:  x</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt; t = 4.1367, df = 9, p-value = 0.002534</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is not equal to 0</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt; 88 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt;  2.631598 6.368402</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt; mean of x </span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<p><code>t.test()</code> returns the interval (2.63, 6.37), exactly what we calculated by hand, which is reassuring. It also does a one-sample T-test for us as well.</p>
+<p>If we don’t specify <code>conf.level</code>, we get a 95 percent confidence interval:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">t.test</span>(x)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; data:  x</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; t = 4.1367, df = 9, p-value = 0.002534</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is not equal to 0</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; 95 percent confidence interval:</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;  2.0392 6.9608</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; mean of x </span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<p>This is wider than the 88 percent confidence interval, as we would expect.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

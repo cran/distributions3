@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Intro to hypothesis testing</title>
+
+
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Intro to hypothesis testing</h1>
+
+
+
+<p>Hypothesis testing is all about answering the question: for a parameter <span class="math inline">\(\theta\)</span>, is a parameter value of <span class="math inline">\(\theta_0\)</span> consistent with the data in our observed sample?</p>
+<p>We call this is the <em>null hypothesis</em> and write</p>
+<p><span class="math display">\[
+  H_0 : \theta = \theta_0
+\]</span></p>
+<p>where this means that true (population) value of a parameter <span class="math inline">\(\theta\)</span> is equal to some value <span class="math inline">\(\theta_0\)</span>.</p>
+<p>What do we do next? We <em>assume</em> that <span class="math inline">\(\theta = \theta_0\)</span> in the population, and then check if this assumption is compatible with our observed data. The population with <span class="math inline">\(\theta = \theta_0\)</span> corresponds to a probability distribution, which we call the <em>null distribution</em>.</p>
+<p>Let’s make this concrete. Suppose that we observe data <span class="math inline">\(2, 3, 7\)</span> and we know that our data comes from a normal distribution with known variance <span class="math inline">\(\sigma^2 = 2\)</span>. Realistically, we won’t know <span class="math inline">\(\sigma^2\)</span>, or that our data is normal, but we’ll work with these assumptions for now and relax them later.</p>
+<p>Let’s suppose we’re interested in the population mean. Let’s guess that the population mean is 8. In this case we would write the null hypothesis as <span class="math inline">\(H_0 : \mu = 8\)</span>. This is a ridiculous guess for the population mean given our data, but it’ll illustrate our point. Our null distribution is then <span class="math inline">\(\mathrm{Normal}(8, 2)\)</span>.</p>
+<p>Now that we have a null distribution, we need to dream up a <em>test statistic</em>. In this class, you’ll always be given a test statistic. For now we’ll use the T statistic.</p>
+<p><span class="math display">\[
+  Z = {\bar x - \mu_0 \over \mathrm{se}\left(\bar x \right)}
+    = {\bar x - \mu_0 \over {\sigma \over \sqrt n}}
+    = {4 \over \sqrt \frac 23}
+    \approx 4.9
+\]</span></p>
+<p>Recall: a <em>statistic</em> <span class="math inline">\(T(X)\)</span> is a function from a random sample into the real line. Since statistics are functions of random samples, they are themselves random variables.</p>
+<p>Test statistics are chosen to have two important properties:</p>
+<ol style="list-style-type: decimal">
+<li>They need to relate to the population parameter we’re interested in measuring</li>
+<li>We need to know their sampling distributions</li>
+</ol>
+<p>Sampling distributions you say! Why do test statistics have sampling distributions? Because we’re just taking a function of a random sample.</p>
+<p>For this example, we know that</p>
+<p><span class="math display">\[
+  Z \sim \mathrm{Normal}(0, 1)
+\]</span></p>
+<p>and now we ask how probable is this statistic <em>given that we have assumed that null distribution is true</em>.</p>
+<p>The idea is that if this number is very small, then our null distribution can’t be correct: we shouldn’t observe highly unlikely statistics. This means that hypothesis testing is a form of <em>falsification testing</em>.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>For the example above, we are interested in the probability of observing a more extreme test statistic given the null distribution, which in this case is:</p>
+<p><span class="math display">\[
+  P(|Z| &gt; 4.9) = P(Z &lt; -4.9) + P(Z &gt; 4.9) 
+               \approx 9.6 \cdot 10^{-7}
+\]</span></p>
+<p>This probability is called a <em>p-value</em>. Since it’s very small, we conclude that the null hypothesis is not realistic. In other words, the population mean is statistically distinguishable from 8 (whether or not it is practically distinguishable from 8 is entirely another matter).</p>
+<p>This is the just of hypothesis testing. Of course there’s a bunch of other associated nonsense that obscures the basic idea, which we’ll dive into next.</p>
+<div id="things-that-can-go-wrong" class="section level3">
+<h3>Things that can go wrong</h3>
+<div id="false-positives" class="section level4">
+<h4>False positives</h4>
+<p>We need to be concerned about rejecting the null hypothesis when the null hypothesis is true. This is called a <em>false positive</em> or a Type I error.</p>
+<p>If the null hypothesis is true, and we calculate a statistic like we did above, we still expect to see a value of p-value of <span class="math inline">\(9.6 \cdot 10^{-7}\)</span> about <span class="math inline">\(9.6 \cdot 10^{-5}\)</span> percent of the time. For small p-values this isn’t an issue, but let’s consider a different null hypothesis of <span class="math inline">\(\mu_0 = 3.9\)</span>. Now</p>
+<p><span class="math display">\[
+  Z = {\bar x - \mu_0 \over {\sigma \over \sqrt n}}
+    = {4 - 3.9 \over \sqrt \frac 23}
+    \approx 0.12
+\]</span></p>
+<p>and our corresponding p-value is</p>
+<p><span class="math display">\[
+  P(|Z| &gt; 0.12) = P(Z &lt; -0.12) + P(Z &gt; 0.12)
+                \approx 0.9
+\]</span></p>
+<p>and we see that this is quite probable! We should definitely not reject the null hypothesis!</p>
+<p>This leads us to a new question: when <em>should</em> we reject the null hypothesis? A standard choice is to set an acceptable probability for a false positive <span class="math inline">\(\alpha\)</span>. One arbitrary but common choice is to set <span class="math inline">\(\alpha = 0.05\)</span>, which means we are okay with a <span class="math inline">\({1 \over 20}\)</span> chance of a false positive. We should then reject the null hypothesis when the p-value is less than <span class="math inline">\(\alpha\)</span>. This is often called “rejecting the null hypothesis at significance level <span class="math inline">\(\alpha\)</span>”. More formally, we might write</p>
+<p><span class="math display">\[
+  P(\text{reject} \; H_0 | H_0 \; \text{true}) = \alpha
+\]</span></p>
+</div>
+<div id="false-negatives" class="section level4">
+<h4>False negatives</h4>
+<p>On the other hand, we may also fail to reject the null hypothesis when the null hypothesis is in fact false. We might just not have enough data to reject the null, for example. We call this a <em>false negative</em> or a Type II error. We write this as</p>
+<p><span class="math display">\[
+  \text{Power} = P(\text{fail to reject} \; H_0 | H_0 \; \text{false})
+               = 1 - \beta
+\]</span></p>
+<p>To achieve a power of <span class="math inline">\(1 - \beta\)</span> for a one sample Z-test, you need</p>
+<p><span class="math display">\[
+  n \approx \left(
+    {
+      \sigma \cdot (z_{\alpha / 2} + z_\beta) \over
+      \mu_0 - \mu_A
+    }
+  \right)^2
+\]</span></p>
+<p>where <span class="math inline">\(\mu_A\)</span> is the true mean and <span class="math inline">\(\mu_0\)</span> is the proposed mean. We’ll do an exercise later that will help you see where this comes from.</p>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<div id="z-test" class="section level3">
+<h3>Z-test</h3>
+<p>A company claims battery lifetimes are normally distributed with <span class="math inline">\(\mu = 40\)</span> and <span class="math inline">\(\sigma = 5\)</span> hours. We are curious if the claim about the mean is reasonable, and collect a random sample of 100 batteries. The sample mean is 39.8. What is the p-value of a Z-test for <span class="math inline">\(H_0 : \mu = 40\)</span>?</p>
+<p>We begin by calculating a Z-score</p>
+<p><span class="math display">\[
+  Z = {\bar x - \mu_0 \over {\sigma \over \sqrt n}}
+    = {39.8 - 40 \over {5 \over \sqrt 100}}
+    = 0.4
+\]</span></p>
+<p>and then we calulate, using the fact that <span class="math inline">\(Z \sim \mathrm{Normal}(0, 1)\)</span>,</p>
+<p><span class="math display">\[
+  P(Z &lt; -0.4) + P(Z &gt; 0.4) \approx 0.69
+\]</span></p>
+<p>we might also be interested in a <em>one-sided</em> test, where <span class="math inline">\(H_A : \mu &lt; 40\)</span>. In this case the p-value is only the case when <span class="math inline">\(Z &lt; -0.4\)</span>, and the p-value is</p>
+<p><span class="math display">\[
+  P(Z &lt; -0.4) \approx 0.34
+\]</span></p>
+</div>
+<div id="power-for-z-test" class="section level3">
+<h3>Power for Z-test</h3>
+<p>Suppose a powdered medicine is supposed to have a mean particle diameter of <span class="math inline">\(\mu = 15\)</span> micrometers, and the standard deviation of diameters stays steady around 1.8 micrometers. The company would like to have high power to detect mean thicknesses 0.2 micrometers away from 15. When <span class="math inline">\(n = 100\)</span>, what is the power of the test if the true <span class="math inline">\(\mu\)</span> is 15.2 micrometers. Assume the company is interested in controlling type I error at an <span class="math inline">\(\alpha = 0.05\)</span> level.</p>
+<p>We will reject the null when our Z score is less than <span class="math inline">\(z_{\alpha / 2}\)</span> or <span class="math inline">\(z_{1 - \alpha / 2}\)</span>, or when the Z score is less than -1.96 or greater than 1.96. Recall that the Z score is <span class="math inline">\({\bar x - \mu_0 \over {\sigma \over \sqrt n}}\)</span>, which we can rearrange in terms of <span class="math inline">\(\bar x\)</span> to see that we will reject the null when <span class="math inline">\(\bar x &lt; 14.65\)</span> or <span class="math inline">\(\bar x &gt; 15.35\)</span>.</p>
+<p>Now we are interested in the probability of being in this rejection region <em>when the alternative hypothesis <span class="math inline">\(\mu_A = 15.2\)</span> is true</em>.</p>
+<!-- this is magical why are we interested in this -->
+<p><span class="math display">\[
+  P(\bar x &gt; 15.35 | \mu = 15.2) + P(\bar x &lt; 14.65 | \mu = 15.2)
+\]</span></p>
+<p>and we know that <span class="math inline">\(\bar x \sim \mathrm{Normal} \left(15.2, 1.8 / \sqrt{100}\right)\)</span> so this equals</p>
+<p><span class="math display">\[
+  0.001 + 0.198 \approx 0.199
+\]</span></p>
+<p>So we have only a power of about 20 percent. This is quite low.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

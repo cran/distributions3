@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Two sample Z-tests</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Two sample Z-tests</h1>
+
+
+
+<p>In this vignette, we work through a two sample Z-test. If you haven’t seen a one-sample Z-test, we recommend you read <code>vignette(&quot;one-sample-z-test&quot;)</code> first.</p>
+<div id="problem-setup" class="section level2">
+<h2>Problem setup</h2>
+<p>Let’s suppose that a student wants to figure out if biology professors or English professors know more memes. The student writes a meme quiz and springs it on 14 unsuspecting biology professors and 18 unsuspecting English professors during office hours.</p>
+<p>The biology professors get the following scores:</p>
+<p><span class="math display">\[
+  3, 7, 11, 0, 7, 0, 4, 5, 6, 2, 4, 7, 2, 9
+\]</span></p>
+<p>and the English professors score:</p>
+<p><span class="math display">\[
+  5, 5, 4, 5, 4, 5, 7, 2, 6, 2, 2, 7, 2, 6, 4, 2, 5, 2
+\]</span></p>
+<p>We’ll assume that the population variance of the biology professor scores is <span class="math inline">\(\sigma^2_1 = 3\)</span> and the population variance of the English professor scores is <span class="math inline">\(\sigma^2_2 = 2\)</span>.</p>
+</div>
+<div id="assumption-checking" class="section level2">
+<h2>Assumption checking</h2>
+<p>Before we can do a Z-test, we need to make check if we can reasonably treat the means of <em>each sample</em> as normally distributed. This happens is the case of either of following hold:</p>
+<ol style="list-style-type: decimal">
+<li>The data comes from a normal distribution.</li>
+<li>We have lots of data. How much? Many textbooks use 30 data points as a rule of thumb.</li>
+</ol>
+<p>Since both of samples have less than 30 data points, we need to check if they are plausibly from normal distributions. We check the biology professor scores first using a normal quantile-quantile plot.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">biology &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">2</span>, <span class="dv">9</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2">english &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">8</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">12</span>, <span class="dv">5</span>, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">qqnorm</span>(biology)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">qqline</span>(biology)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Since the biology scores lies close the line <span class="math inline">\(y = x\)</span>, and has no notable systematic deviations from line, it’s safe to treat the sample as coming from a normal distribution. Honestly this quantile-quantile plot is so good it’s suspicious.</p>
+<p>Anyway, next we check the English scores</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">qqnorm</span>(english)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">qqline</span>(english)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>And it seems fine as well. We can also create side-by-side boxplots of the data using the <code>ggplot2</code> package to get a nice comparison of the two groups. This requires a little bit of data manipulation:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co"># make a data frame in long format for plotting</span></a>
+<a class="sourceLine" id="cb3-4" title="4">test_results &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb3-5" title="5">  <span class="dt">score =</span> <span class="kw">c</span>(biology, english),</a>
+<a class="sourceLine" id="cb3-6" title="6">  <span class="dt">department =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="kw">rep</span>(<span class="st">&quot;biology&quot;</span>, <span class="kw">length</span>(biology)),</a>
+<a class="sourceLine" id="cb3-8" title="8">    <span class="kw">rep</span>(<span class="st">&quot;english&quot;</span>, <span class="kw">length</span>(english))</a>
+<a class="sourceLine" id="cb3-9" title="9">  )</a>
+<a class="sourceLine" id="cb3-10" title="10">)</a>
+<a class="sourceLine" id="cb3-11" title="11"></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="kw">ggplot</span>(test_results, <span class="kw">aes</span>(<span class="dt">x =</span> department, <span class="dt">y =</span> score, <span class="dt">color =</span> department)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="st">  </span><span class="kw">geom_jitter</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">type =</span> <span class="st">&quot;qual&quot;</span>, <span class="dt">palette =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Based on eye-balling the data, we’d be pretty surprised if we rejected a null hypothesis of equal means between the two groups.</p>
+</div>
+<div id="null-hypothesis-and-test-statistic" class="section level2">
+<h2>Null hypothesis and test statistic</h2>
+<p>Let’s write the null hypothesis out (here we treat biology professors as group 1 and English professors as group 2):</p>
+<p><span class="math display">\[
+  H_0: \mu_1 - \mu_2 = 0 \qquad H_A: \mu_1 - \mu_2 \neq 0
+\]</span></p>
+<p>First we need to calculate our Z-statistic. Let’s use do this with R. Remember that the Z-statistic is defined as</p>
+<p><span class="math display">\[
+  Z = \frac{\bar x_1 - \bar x_2 - \delta_0}
+    {\sqrt{\sigma_1^2 / n_1 + \sigma_2^2 / n_2}} \sim \mathrm{Normal}(0, 1)
+\]</span></p>
+<p>In R this looks like:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">delta_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb4-2" title="2"></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co"># by assumption</span></a>
+<a class="sourceLine" id="cb4-4" title="4">sigma_sq_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb4-5" title="5">sigma_sq_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb4-6" title="6"></a>
+<a class="sourceLine" id="cb4-7" title="7">n_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">length</span>(biology)</a>
+<a class="sourceLine" id="cb4-8" title="8">n_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">length</span>(english)</a>
+<a class="sourceLine" id="cb4-9" title="9"></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co"># calculate the z-statistic</span></a>
+<a class="sourceLine" id="cb4-11" title="11">z_stat &lt;-<span class="st"> </span>(<span class="kw">mean</span>(biology) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(english) <span class="op">-</span><span class="st"> </span>delta_<span class="dv">0</span>) <span class="op">/</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="st">  </span><span class="kw">sqrt</span>(sigma_sq_<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>n_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>sigma_sq_<span class="dv">2</span> <span class="op">/</span><span class="st"> </span>n_<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb4-13" title="13"></a>
+<a class="sourceLine" id="cb4-14" title="14">z_stat</a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt; [1] -0.3756527</span></a></code></pre></div>
+</div>
+<div id="calculating-p-values" class="section level2">
+<h2>Calculating p-values</h2>
+<p>To calculate a two-sided p-value, we need to find</p>
+<p><span class="math display">\[\begin{align}
+  P(|Z| \ge |-0.376|)
+  &amp;= P(Z \ge 0.376) + P(Z \le -0.376) \\
+  &amp;= 1 - P(Z \le 0.376) + P(Z \le -0.376) \\
+  &amp;= 1 - \Phi(0.376) + \Phi(0.376)
+\end{align}\]</span></p>
+<p>To do this we need to c.d.f. of a standard normal</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">library</span>(distributions3)</a>
+<a class="sourceLine" id="cb5-2" title="2"></a>
+<a class="sourceLine" id="cb5-3" title="3">Z &lt;-<span class="st"> </span><span class="kw">Normal</span>(<span class="dv">0</span>, <span class="dv">1</span>)  <span class="co"># make a standard normal r.v.</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="fl">0.376</span>) <span class="op">+</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="fl">-0.376</span>)</a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; [1] 0.7069169</span></a></code></pre></div>
+<p>Note that we saved <code>z_stat</code> above so we could have also done</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="kw">abs</span>(z_stat)) <span class="op">+</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="op">-</span><span class="kw">abs</span>(z_stat))</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt; [1] 0.7071751</span></a></code></pre></div>
+<p>which is slightly more accurate since there is no rounding error.</p>
+<p>So our p-value is about 0.71. You should verify this with a Z-table. Note that you should get the <em>same</em> value from <code>cdf(Z, -0.376)</code> and looking up <code>-0.376</code> on a Z-table.</p>
+<p>You may also have seen a different formula for the p-value of a two-sided Z-test, which makes use of the fact that the normal distribution is symmetric:</p>
+<p><span class="math display">\[\begin{align}
+  P(|Z| \ge |-0.376|)
+  &amp;= 2 \cdot P(Z \le -|-0.376|)
+  &amp;= 2 \cdot \Phi(-0.376)
+\end{align}\]</span></p>
+<p>Using this formula we get the same result:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="fl">-0.376</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">#&gt; [1] 0.7069169</span></a></code></pre></div>
+<p>Finally, sometimes we are interest in one sided Z-tests. For the test</p>
+<p><span class="math display">\[\begin{align}
+  H_0: \mu \le 3 \qquad H_A: \mu &gt; 3
+\end{align}\]</span></p>
+<p>the p-value is given by</p>
+<p><span class="math display">\[
+  P(Z &gt; -0.376)
+\]</span></p>
+<p>which we calculate with</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(Z, <span class="fl">-0.376</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt; [1] 0.6465416</span></a></code></pre></div>
+<p>For the test</p>
+<p><span class="math display">\[
+  H_0: \mu \ge 3 \qquad H_A: \mu &lt; 3
+\]</span></p>
+<p>the p-value is given by</p>
+<p><span class="math display">\[
+  P(Z &lt; -0.376)
+\]</span></p>
+<p>which we calculate with</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">cdf</span>(Z, <span class="fl">-0.376</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="co">#&gt; [1] 0.3534584</span></a></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
