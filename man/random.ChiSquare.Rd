@@ -4,10 +4,10 @@
 \alias{random.ChiSquare}
 \title{Draw a random sample from a chi square distribution}
 \usage{
-\method{random}{ChiSquare}(d, n = 1L, ...)
+\method{random}{ChiSquare}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{ChiSquare} object created by a call to \code{\link[=ChiSquare]{ChiSquare()}}.}
+\item{x}{A \code{ChiSquare} object created by a call to \code{\link[=ChiSquare]{ChiSquare()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -26,6 +26,11 @@ set.seed(27)
 
 X <- ChiSquare(5)
 X
+
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
 
 random(X, 10)
 

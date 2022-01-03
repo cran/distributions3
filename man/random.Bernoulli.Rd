@@ -4,10 +4,10 @@
 \alias{random.Bernoulli}
 \title{Draw a random sample from a Bernoulli distribution}
 \usage{
-\method{random}{Bernoulli}(d, n = 1L, ...)
+\method{random}{Bernoulli}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{Bernoulli} object created by a call to \code{\link[=Bernoulli]{Bernoulli()}}.}
+\item{x}{A \code{Bernoulli} object created by a call to \code{\link[=Bernoulli]{Bernoulli()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -27,6 +27,11 @@ set.seed(27)
 X <- Bernoulli(0.7)
 X
 
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
+
 random(X, 10)
 pdf(X, 1)
 log_pdf(X, 1)
@@ -35,4 +40,5 @@ quantile(X, 0.7)
 
 cdf(X, quantile(X, 0.7))
 quantile(X, cdf(X, 0.7))
+
 }

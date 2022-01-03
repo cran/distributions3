@@ -24,7 +24,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail.
 #'
 #'   In the following, let \eqn{X} be a Gamma random variable
@@ -87,14 +87,29 @@ Gamma <- function(shape, rate = 1) {
 
 #' @export
 print.Gamma <- function(x, ...) {
-  cat(glue("Gamma distribution (shape = {x$shape}, rate = {x$rate})\n"))
+  cat(glue("Gamma distribution (shape = {x$shape}, rate = {x$rate})"), "\n")
 }
+
+#' @export
+mean.Gamma <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$shape / x$rate
+}
+
+#' @export
+variance.Gamma <- function(x, ...) x$shape / x$rate^2
+
+#' @export
+skewness.Gamma <- function(x, ...) 2 / sqrt(x$shape)
+
+#' @export
+kurtosis.Gamma <- function(x, ...) 6 / x$shape
 
 #' Draw a random sample from a Gamma distribution
 #'
 #' @inherit Gamma examples
 #'
-#' @param d A `Gamma` object created by a call to [Gamma()].
+#' @param x A `Gamma` object created by a call to [Gamma()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -102,15 +117,15 @@ print.Gamma <- function(x, ...) {
 #' @return A numeric vector of length `n`.
 #' @export
 #'
-random.Gamma <- function(d, n = 1L, ...) {
-  rgamma(n = n, shape = d$shape, rate = d$rate)
+random.Gamma <- function(x, n = 1L, ...) {
+  rgamma(n = n, shape = x$shape, rate = x$rate)
 }
 
 #' Evaluate the probability mass function of a Gamma distribution
 #'
 #' @inherit Gamma examples
-#' @inheritParams random.Gamma
 #'
+#' @param d A `Gamma` object created by a call to [Gamma()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -133,8 +148,8 @@ log_pdf.Gamma <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Gamma distribution
 #'
 #' @inherit Gamma examples
-#' @inheritParams random.Gamma
 #'
+#' @param d A `Gamma` object created by a call to [Gamma()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -154,15 +169,16 @@ cdf.Gamma <- function(d, x, ...) {
 #' @inherit Gamma examples
 #' @inheritParams random.Gamma
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
-quantile.Gamma <- function(d, p, ...) {
-  qgamma(p = p, shape = d$shape, rate = d$rate)
+quantile.Gamma <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qgamma(p = probs, shape = x$shape, rate = x$rate)
 }
 
 #' Fit a Gamma distribution to data
@@ -178,7 +194,7 @@ fit_mle.Gamma <- function(d, x, ...) {
   stop("`fit_mle` is not implemented for the Gamma distribution yet")
 }
 
-#' Compute the sufficient statistics for a bernoulli distribution from data
+#' Compute the sufficient statistics for a Gamma distribution from data
 #'
 #'   - `sum`: The sum of the data.
 #'   - `log_sum`: The log of the sum of the data.
@@ -190,3 +206,12 @@ suff_stat.Gamma <- function(d, x, ...) {
   if (any(x < 0)) stop("`x` must only contain positive real numbers")
   list(sum = sum(x), log_sum = sum(log(x)), samples = length(x))
 }
+
+#' Return the support of the Gamma distribution
+#'
+#' @param d An `Gamma` object created by a call to [Gamma()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Gamma <- function(d) c(0, Inf)

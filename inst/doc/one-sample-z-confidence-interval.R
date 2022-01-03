@@ -1,4 +1,4 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(distributions3)
 
 # read in the data
@@ -20,12 +20,17 @@ Z <- Normal(0, 1)
 mean(x) + quantile(Z, 0.12 / 2) * 2 / sqrt(n)
 mean(x) + quantile(Z, 1 - 0.12 / 2) * 2 / sqrt(n)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # second approach
 mean(x) - quantile(Z, 1 - 0.12 / 2) * 2 / sqrt(n)
 mean(x) + quantile(Z, 1 - 0.12 / 2) * 2 / sqrt(n)
 
-## ----echo = FALSE--------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
+got_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE)
+got_cowplot <- requireNamespace("cowplot", quietly = TRUE)
+got_ggplot2_and_cowplot <- got_ggplot2 * got_cowplot
+
+## ---- echo = FALSE, eval = got_ggplot2_and_cowplot----------------------------
 library(ggplot2)
 library(cowplot)
 

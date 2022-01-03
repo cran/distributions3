@@ -4,18 +4,18 @@
 \alias{quantile.Normal}
 \title{Determine quantiles of a Normal distribution}
 \usage{
-\method{quantile}{Normal}(d, p, ...)
+\method{quantile}{Normal}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{Normal} object created by a call to \code{\link[=Normal]{Normal()}}.}
+\item{x}{A \code{Normal} object created by a call to \code{\link[=Normal]{Normal()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 Please see the documentation of \code{\link[=Normal]{Normal()}} for some properties
@@ -35,6 +35,11 @@ set.seed(27)
 
 X <- Normal(5, 2)
 X
+
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
 
 random(X, 10)
 
@@ -112,7 +117,9 @@ quantile(X, cdf(X, 7))
 
 }
 \seealso{
-Other Normal distribution: \code{\link{cdf.Normal}},
-  \code{\link{fit_mle.Normal}}, \code{\link{pdf.Normal}}
+Other Normal distribution: 
+\code{\link{cdf.Normal}()},
+\code{\link{fit_mle.Normal}()},
+\code{\link{pdf.Normal}()}
 }
 \concept{Normal distribution}

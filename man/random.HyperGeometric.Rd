@@ -4,10 +4,10 @@
 \alias{random.HyperGeometric}
 \title{Draw a random sample from a HyperGeometric distribution}
 \usage{
-\method{random}{HyperGeometric}(d, n = 1L, ...)
+\method{random}{HyperGeometric}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{HyperGeometric} object created by a call to \code{\link[=HyperGeometric]{HyperGeometric()}}.}
+\item{x}{A \code{HyperGeometric} object created by a call to \code{\link[=HyperGeometric]{HyperGeometric()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -38,8 +38,9 @@ cdf(X, 4)
 quantile(X, 0.7)
 }
 \seealso{
-Other HyperGeometric distribution: \code{\link{cdf.HyperGeometric}},
-  \code{\link{pdf.HyperGeometric}},
-  \code{\link{quantile.HyperGeometric}}
+Other HyperGeometric distribution: 
+\code{\link{cdf.HyperGeometric}()},
+\code{\link{pdf.HyperGeometric}()},
+\code{\link{quantile.HyperGeometric}()}
 }
 \concept{HyperGeometric distribution}

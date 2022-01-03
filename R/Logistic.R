@@ -18,7 +18,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Logistic random variable with
@@ -79,15 +79,30 @@ Logistic <- function(location = 0, scale = 1) {
 #' @export
 print.Logistic <- function(x, ...) {
   cat(
-    glue("Logistic distribution (location = {x$location}, scale = {x$scale})\n")
+    glue("Logistic distribution (location = {x$location}, scale = {x$scale})", "\n")
   )
 }
+
+#' @export
+mean.Logistic <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$location
+}
+
+#' @export
+variance.Logistic <- function(x, ...) x$scale^2 * pi^2 / 3
+
+#' @export
+skewness.Logistic <- function(x, ...) 0
+
+#' @export
+kurtosis.Logistic <- function(x, ...) 6 / 5
 
 #' Draw a random sample from a Logistic distribution
 #'
 #' @inherit Logistic examples
 #'
-#' @param d A `Logistic` object created by a call to [Logistic()].
+#' @param x A `Logistic` object created by a call to [Logistic()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -97,8 +112,8 @@ print.Logistic <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.Logistic <- function(d, n = 1L, ...) {
-  rlogis(n = n, location = d$location, scale = d$scale)
+random.Logistic <- function(x, n = 1L, ...) {
+  rlogis(n = n, location = x$location, scale = x$scale)
 }
 
 #' Evaluate the probability mass function of a Logistic distribution
@@ -108,8 +123,8 @@ random.Logistic <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit Logistic examples
-#' @inheritParams random.Logistic
 #'
+#' @param d A `Logistic` object created by a call to [Logistic()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -133,8 +148,8 @@ log_pdf.Logistic <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Logistic distribution
 #'
 #' @inherit Logistic examples
-#' @inheritParams random.Logistic
 #'
+#' @param d A `Logistic` object created by a call to [Logistic()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -154,15 +169,31 @@ cdf.Logistic <- function(d, x, ...) {
 #' @inherit Logistic examples
 #' @inheritParams random.Logistic
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family Logistic distribution
 #'
-quantile.Logistic <- function(d, p, ...) {
-  qlogis(p = p, location = d$location, scale = d$scale)
+quantile.Logistic <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qlogis(p = probs, location = x$location, scale = x$scale)
+}
+
+#' Return the support of the Logistic distribution
+#'
+#' @param d An `Logistic` object created by a call to [Logistic()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Logistic <- function(d){
+  if(!is_distribution(d)){
+    message("d has to be a disitrubtion")
+    stop()
+  }
+  return(c(-Inf, Inf))
 }

@@ -17,7 +17,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Students T random variable with
@@ -120,8 +120,32 @@ StudentsT <- function(df) {
 
 #' @export
 print.StudentsT <- function(x, ...) {
-  cat(glue("Student's T distribution (df = {x$df})\n"))
+  cat(glue("Student's T distribution (df = {x$df})"), "\n")
 }
+
+#' @export
+mean.StudentsT <- function(x, ...) {
+  ellipsis::check_dots_used()
+  if (x$df > 1) 0 else NaN
+}
+
+#' @export
+variance.StudentsT <- function(x, ...) {
+  if (x$df > 2) x$df / (x$df - 2)
+  else if (x$df > 1) Inf
+  else NaN
+}
+
+#' @export
+skewness.StudentsT <- function(x, ...) if(x$df > 3) 0 else NaN
+
+#' @export
+kurtosis.StudentsT <- function(x, ...) {
+  if (x$df > 4) 6 / (x$df - 4)
+  else if (x$df > 2) Inf
+  else NaN
+}
+
 
 #' Draw a random sample from a StudentsT distribution
 #'
@@ -131,7 +155,7 @@ print.StudentsT <- function(x, ...) {
 #'
 #' @inherit StudentsT examples
 #'
-#' @param d A `StudentsT` object created by a call to [StudentsT()].
+#' @param x A `StudentsT` object created by a call to [StudentsT()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -142,8 +166,8 @@ print.StudentsT <- function(x, ...) {
 #' @export
 #'
 #'
-random.StudentsT <- function(d, n = 1L, ...) {
-  rt(n = n, df = d$df)
+random.StudentsT <- function(x, n = 1L, ...) {
+  rt(n = n, df = x$df)
 }
 
 #' Evaluate the probability mass function of a StudentsT distribution
@@ -153,8 +177,8 @@ random.StudentsT <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit StudentsT examples
-#' @inheritParams random.StudentsT
 #'
+#' @param d A `StudentsT` object created by a call to [StudentsT()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -179,8 +203,8 @@ log_pdf.StudentsT <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a StudentsT distribution
 #'
 #' @inherit StudentsT examples
-#' @inheritParams random.StudentsT
 #'
+#' @param d A `StudentsT` object created by a call to [StudentsT()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -211,15 +235,28 @@ cdf.StudentsT <- function(d, x, ...) {
 #' @inherit StudentsT examples
 #' @inheritParams random.StudentsT
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family StudentsT distribution
 #'
-quantile.StudentsT <- function(d, p, ...) {
-  qt(p = p, df = d$df)
+quantile.StudentsT <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qt(p = probs, df = x$df)
+}
+
+
+#' Return the support of the StudentsT distribution
+#'
+#' @param d An `StudentsT` object created by a call to [StudentsT()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.StudentsT <- function(d){
+  return(c(-Inf, Inf))
 }

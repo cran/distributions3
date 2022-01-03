@@ -24,13 +24,13 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a HyperGeometric random variable with
 #'   success probability `p` = \eqn{p = m/(m+n)}.
 #'
-#'   **Support**: \eqn{x \in { \{\max{(0, k-(n-m)}, \dots, \min{(k,m)}}\}}
+#'   **Support**: \eqn{x \in { \{\max{(0, k-n)}, \dots, \min{(k,m)}}\}}
 #'
 #'   **Mean**: \eqn{\frac{km}{n+m} = kp}
 #'
@@ -69,6 +69,9 @@
 #' cdf(X, 4)
 #' quantile(X, 0.7)
 HyperGeometric <- function(m, n, k) {
+  if(k > n + m)
+    stop(glue::glue("k ({k}) cannot be greater than m + n ({m} + {n} = {m+n})"))
+
   d <- list(m = m, n = n, k = k)
   class(d) <- c("HyperGeometric", "distribution")
   d
@@ -76,7 +79,50 @@ HyperGeometric <- function(m, n, k) {
 
 #' @export
 print.HyperGeometric <- function(x, ...) {
-  cat(glue("HyperGeometric distribution (m = {x$m}, n = {x$n}, k = {x$k})\n"))
+  cat(glue("HyperGeometric distribution (m = {x$m}, n = {x$n}, k = {x$k})"), "\n")
+}
+
+#' @export
+mean.HyperGeometric <- function(x, ...) {
+  ellipsis::check_dots_used()
+  # Reformulating to match Wikipedia
+  # N is the population size
+  N <- x$n + x$m
+  # K number of success states
+  K <- x$m
+  # n number of draws
+  n <- x$k
+
+  n * K / N
+}
+
+#' @export
+variance.HyperGeometric <- function(x, ...) {
+  N <- x$n + x$m
+  K <- x$m
+  n <- x$k
+
+  (n * K * (N - K) * (N - n)) / (N^2 * (N - 1))
+}
+
+#' @export
+skewness.HyperGeometric <- function(x, ...) {
+  N <- x$n + x$m
+  K <- x$m
+  n <- x$k
+
+  a <- (N - 2 * K) * (N - 1)^0.5 * (N - 2 * n)
+  b <- (n * K * (N - K) * (N - n))^0.5 * (N - 2)
+  a / b
+}
+
+#' @export
+kurtosis.HyperGeometric <- function(x, ...) {
+  N <- x$n + x$m
+  K <- x$m
+  n <- x$k
+
+  1 / (n * K * (N - K) * (N - n) * (N - 2) * (N - 3))
 }
 
 #' Draw a random sample from a HyperGeometric distribution
@@ -87,7 +133,7 @@ print.HyperGeometric <- function(x, ...) {
 #'
 #' @inherit HyperGeometric examples
 #'
-#' @param d A `HyperGeometric` object created by a call to [HyperGeometric()].
+#' @param x A `HyperGeometric` object created by a call to [HyperGeometric()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -97,8 +143,8 @@ print.HyperGeometric <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.HyperGeometric <- function(d, n = 1L, ...) {
-  rhyper(nn = n, m = d$m, n = d$n, k = d$k)
+random.HyperGeometric <- function(x, n = 1L, ...) {
+  rhyper(nn = n, m = x$m, n = x$n, k = x$k)
 }
 
 #' Evaluate the probability mass function of a HyperGeometric distribution
@@ -108,8 +154,8 @@ random.HyperGeometric <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit HyperGeometric examples
-#' @inheritParams random.HyperGeometric
 #'
+#' @param d A `HyperGeometric` object created by a call to [HyperGeometric()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -133,8 +179,8 @@ log_pdf.HyperGeometric <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a HyperGeometric distribution
 #'
 #' @inherit HyperGeometric examples
-#' @inheritParams random.HyperGeometric
 #'
+#' @param d A `HyperGeometric` object created by a call to [HyperGeometric()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -154,15 +200,28 @@ cdf.HyperGeometric <- function(d, x, ...) {
 #' @inherit HyperGeometric examples
 #' @inheritParams random.HyperGeometric
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family HyperGeometric distribution
 #'
-quantile.HyperGeometric <- function(d, p, ...) {
-  qhyper(p = p, m = d$m, n = d$n, k = d$k)
+quantile.HyperGeometric <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qhyper(p = probs, m = x$m, n = x$n, k = x$k)
+}
+
+
+#' Return the support of the HyperGeometric distribution
+#'
+#' @param d An `HyperGeometric` object created by a call to [HyperGeometric()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.HyperGeometric <- function(d){
+  c(max(0, d$k - d$n), min(d$m, d$k))
 }

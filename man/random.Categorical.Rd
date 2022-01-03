@@ -4,10 +4,10 @@
 \alias{random.Categorical}
 \title{Draw a random sample from a Categorical distribution}
 \usage{
-\method{random}{Categorical}(d, n = 1L, ...)
+\method{random}{Categorical}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{Categorical} object created by a call to \code{\link[=Categorical]{Categorical()}}.}
+\item{x}{A \code{Categorical} object created by a call to \code{\link[=Categorical]{Categorical()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -38,12 +38,11 @@ log_pdf(X, 1)
 
 cdf(X, 1)
 quantile(X, 0.5)
-\dontrun{
+
 # cdfs are only defined for numeric sample spaces. this errors!
-cdf(Y, "a")
+# cdf(Y, "a")
 
 # same for quantiles. this also errors!
-quantile(Y, 0.7)
-}
+# quantile(Y, 0.7)
 
 }

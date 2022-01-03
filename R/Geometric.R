@@ -17,7 +17,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Geometric random variable with
@@ -73,8 +73,22 @@ Geometric <- function(p = 0.5) {
 
 #' @export
 print.Geometric <- function(x, ...) {
-  cat(glue("Geometric distribution (p = {x$p})\n"))
+  cat(glue("Geometric distribution (p = {x$p})"), "\n")
 }
+
+#' @export
+mean.Geometric <- function(x, ...) {
+  ellipsis::check_dots_used()
+  1 / x$p
+}
+#' @export
+variance.Geometric <- function(x, ...) (1 - x$p) / x$p^2
+
+#' @export
+skewness.Geometric <- function(x, ...) (2 - x$p) / sqrt(1 - x$p)
+
+#' @export
+kurtosis.Geometric <- function(x, ...) 6 + (x$p^2 / (1 - x$p))
 
 #' Draw a random sample from a Geometric distribution
 #'
@@ -84,7 +98,7 @@ print.Geometric <- function(x, ...) {
 #'
 #' @inherit Geometric examples
 #'
-#' @param d A `Geometric` object created by a call to [Geometric()].
+#' @param x A `Geometric` object created by a call to [Geometric()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -94,8 +108,8 @@ print.Geometric <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.Geometric <- function(d, n = 1L, ...) {
-  rgeom(n = n, prob = d$p)
+random.Geometric <- function(x, n = 1L, ...) {
+  rgeom(n = n, prob = x$p)
 }
 
 #' Evaluate the probability mass function of a Geometric distribution
@@ -105,8 +119,8 @@ random.Geometric <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit Geometric examples
-#' @inheritParams random.Geometric
 #'
+#' @param d A `Geometric` object created by a call to [Geometric()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -131,8 +145,8 @@ log_pdf.Geometric <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Geometric distribution
 #'
 #' @inherit Geometric examples
-#' @inheritParams random.Geometric
 #'
+#' @param d A `Geometric` object created by a call to [Geometric()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -152,17 +166,18 @@ cdf.Geometric <- function(d, x, ...) {
 #' @inherit Geometric examples
 #' @inheritParams random.Geometric
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family Geometric distribution
 #'
-quantile.Geometric <- function(d, p, ...) {
-  qgeom(p = p, prob = d$p)
+quantile.Geometric <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qgeom(p = probs, prob = x$p)
 }
 
 #' Fit a Geometric distribution to data
@@ -197,4 +212,15 @@ suff_stat.Geometric <- function(d, x, ...) {
     stop("`x` must be a vector of positive discrete numbers")
   }
   list(trials = sum(x), experiments = length(x))
+}
+
+#' Return the support of the Geometric distribution
+#'
+#' @param d An `Geometric` object created by a call to [Geometric()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Geometric <- function(d){
+  c(0, Inf)
 }

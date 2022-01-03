@@ -2,20 +2,20 @@
 % Please edit documentation in R/Exponential.R
 \name{quantile.Exponential}
 \alias{quantile.Exponential}
-\title{Determine quantiles of a Exponential distribution}
+\title{Determine quantiles of an Exponential distribution}
 \usage{
-\method{quantile}{Exponential}(d, p, ...)
+\method{quantile}{Exponential}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{Exponential} object created by a call to \code{\link[=Exponential]{Exponential()}}.}
+\item{x}{An \code{Exponential} object created by a call to \code{\link[=Exponential]{Exponential()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 \code{quantile()} is the inverse of \code{cdf()}.
@@ -26,6 +26,11 @@ set.seed(27)
 
 X <- Exponential(5)
 X
+
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
 
 random(X, 10)
 

@@ -4,18 +4,18 @@
 \alias{quantile.Logistic}
 \title{Determine quantiles of a Logistic distribution}
 \usage{
-\method{quantile}{Logistic}(d, p, ...)
+\method{quantile}{Logistic}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{Logistic} object created by a call to \code{\link[=Logistic]{Logistic()}}.}
+\item{x}{A \code{Logistic} object created by a call to \code{\link[=Logistic]{Logistic()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 Determine quantiles of a Logistic distribution
@@ -36,7 +36,9 @@ cdf(X, 4)
 quantile(X, 0.7)
 }
 \seealso{
-Other Logistic distribution: \code{\link{cdf.Logistic}},
-  \code{\link{pdf.Logistic}}, \code{\link{random.Logistic}}
+Other Logistic distribution: 
+\code{\link{cdf.Logistic}()},
+\code{\link{pdf.Logistic}()},
+\code{\link{random.Logistic}()}
 }
 \concept{Logistic distribution}

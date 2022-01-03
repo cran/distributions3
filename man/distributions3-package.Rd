@@ -6,34 +6,32 @@
 \alias{distributions3-package}
 \title{distributions3: Probability Distributions as S3 Objects}
 \description{
-Tools to create and manipulate probability
-    distributions using S3.  Generics random(), pdf(), cdf() and
-    quantile() provide replacements for base R's r/d/p/q style functions.
-    Functions and arguments have been named carefully to minimize
-    confusion for students in intro stats courses. The documentation for
-    each distribution contains detailed mathematical notes.
+Tools to create and manipulate probability distributions using S3. Generics random(), pdf(), cdf() and quantile() provide replacements for base R's r/d/p/q style functions. Functions and arguments have been named carefully to minimize confusion for students in intro stats courses. The documentation for each distribution contains detailed mathematical notes.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/alexpghayes/distributions3}
+  \item \url{https://alexpghayes.github.io/distributions3/}
   \item Report bugs at \url{https://github.com/alexpghayes/distributions3/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Alex Hayes \email{alexpghayes@gmail.com} (0000-0002-4985-5160)
+\strong{Maintainer}: Alex Hayes \email{alexpghayes@gmail.com} (\href{https://orcid.org/0000-0002-4985-5160}{ORCID})
 
 Authors:
 \itemize{
   \item Ralph Moller-Trane
+  \item Daniel Jordan \email{dandermotj@gmail.com}
+  \item Paul Northrop \email{p.northrop@ucl.ac.uk}
 }
 
 Other contributors:
 \itemize{
-  \item Emil Hvitfeldt \email{emilhhvitfeldt@gmail.com} (0000-0002-0679-1945) [contributor]
-  \item Daniel Jordan \email{dandermotj@gmail.com} [contributor]
+  \item Emil Hvitfeldt \email{emilhhvitfeldt@gmail.com} (\href{https://orcid.org/0000-0002-0679-1945}{ORCID}) [contributor]
   \item Bruna Wundervald \email{brunadaviesw@gmail.com} [contributor]
+  \item Alessandro Gasparini \email{alessandro.gasparini@ki.se} [contributor]
 }
 
 }

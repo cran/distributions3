@@ -4,18 +4,18 @@
 \alias{quantile.Bernoulli}
 \title{Determine quantiles of a Bernoulli distribution}
 \usage{
-\method{quantile}{Bernoulli}(d, p, ...)
+\method{quantile}{Bernoulli}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{Bernoulli} object created by a call to \code{\link[=Bernoulli]{Bernoulli()}}.}
+\item{x}{A \code{Bernoulli} object created by a call to \code{\link[=Bernoulli]{Bernoulli()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 \code{quantile()} is the inverse of \code{cdf()}.
@@ -27,6 +27,11 @@ set.seed(27)
 X <- Bernoulli(0.7)
 X
 
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
+
 random(X, 10)
 pdf(X, 1)
 log_pdf(X, 1)
@@ -35,4 +40,5 @@ quantile(X, 0.7)
 
 cdf(X, quantile(X, 0.7))
 quantile(X, cdf(X, 0.7))
+
 }

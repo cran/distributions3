@@ -4,10 +4,10 @@
 \alias{random.Beta}
 \title{Draw a random sample from a Beta distribution}
 \usage{
-\method{random}{Beta}(d, n = 1L, ...)
+\method{random}{Beta}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{Beta} object created by a call to \code{\link[=Beta]{Beta()}}.}
+\item{x}{A \code{Beta} object created by a call to \code{\link[=Beta]{Beta()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -15,7 +15,7 @@
 catch mispellings or other possible errors.}
 }
 \value{
-A numeric vector containing values in \code{[0, 1]} of length \code{n}.
+A numeric vector containing values in \verb{[0, 1]} of length \code{n}.
 }
 \description{
 Draw a random sample from a Beta distribution
@@ -34,6 +34,11 @@ log_pdf(X, 0.7)
 
 cdf(X, 0.7)
 quantile(X, 0.7)
+
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
 
 cdf(X, quantile(X, 0.7))
 quantile(X, cdf(X, 0.7))

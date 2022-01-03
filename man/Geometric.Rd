@@ -8,7 +8,7 @@ Geometric(p = 0.5)
 }
 \arguments{
 \item{p}{The success probability for the distribution. \code{p} can be
-any value in \code{[0, 1]}, and defaults to \code{0.5}.}
+any value in \verb{[0, 1]}, and defaults to \code{0.5}.}
 }
 \value{
 A \code{Geometric} object.
@@ -22,7 +22,7 @@ distribution is a special case of Negative Binomial distribution.
 }
 \details{
 We recommend reading this documentation on
-\url{https://alexpghayes.github.io/distributions3}, where the math
+\url{https://alexpghayes.github.io/distributions3/}, where the math
 will render with additional detail and much greater clarity.
 
 In the following, let \eqn{X} be a Geometric random variable with
@@ -72,9 +72,13 @@ quantile(X, 0.7)
 
 }
 \seealso{
-Other discrete distributions: \code{\link{Bernoulli}},
-  \code{\link{Binomial}}, \code{\link{Categorical}},
-  \code{\link{HyperGeometric}}, \code{\link{Multinomial}},
-  \code{\link{NegativeBinomial}}, \code{\link{Poisson}}
+Other discrete distributions: 
+\code{\link{Bernoulli}()},
+\code{\link{Binomial}()},
+\code{\link{Categorical}()},
+\code{\link{HyperGeometric}()},
+\code{\link{Multinomial}()},
+\code{\link{NegativeBinomial}()},
+\code{\link{Poisson}()}
 }
 \concept{discrete distributions}

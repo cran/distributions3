@@ -4,10 +4,10 @@
 \alias{random.NegativeBinomial}
 \title{Draw a random sample from a negative binomial distribution}
 \usage{
-\method{random}{NegativeBinomial}(d, n = 1L, ...)
+\method{random}{NegativeBinomial}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{NegativeBinomial} object created by a call to
+\item{x}{A \code{NegativeBinomial} object created by a call to
 \code{\link[=NegativeBinomial]{NegativeBinomial()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
@@ -37,8 +37,9 @@ cdf(X, 4)
 quantile(X, 0.7)
 }
 \seealso{
-Other NegativeBinomial distribution: \code{\link{cdf.NegativeBinomial}},
-  \code{\link{pdf.NegativeBinomial}},
-  \code{\link{quantile.NegativeBinomial}}
+Other NegativeBinomial distribution: 
+\code{\link{cdf.NegativeBinomial}()},
+\code{\link{pdf.NegativeBinomial}()},
+\code{\link{quantile.NegativeBinomial}()}
 }
 \concept{NegativeBinomial distribution}

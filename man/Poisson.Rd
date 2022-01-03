@@ -18,11 +18,11 @@ Poisson distributions are frequently used to model counts.
 }
 \details{
 We recommend reading this documentation on
-\url{https://alexpghayes.github.io/distributions3}, where the math
+\url{https://alexpghayes.github.io/distributions3/}, where the math
 will render with additional detail.
 
 In the following, let \eqn{X} be a Poisson random variable with parameter
-\code{lamdba} = \eqn{\lambda}.
+\code{lambda} = \eqn{\lambda}.
 
 \strong{Support}: \eqn{\{0, 1, 2, 3, ...\}}{{0, 1, 2, 3, ...}}
 
@@ -76,9 +76,13 @@ quantile(X, cdf(X, 7))
 
 }
 \seealso{
-Other discrete distributions: \code{\link{Bernoulli}},
-  \code{\link{Binomial}}, \code{\link{Categorical}},
-  \code{\link{Geometric}}, \code{\link{HyperGeometric}},
-  \code{\link{Multinomial}}, \code{\link{NegativeBinomial}}
+Other discrete distributions: 
+\code{\link{Bernoulli}()},
+\code{\link{Binomial}()},
+\code{\link{Categorical}()},
+\code{\link{Geometric}()},
+\code{\link{HyperGeometric}()},
+\code{\link{Multinomial}()},
+\code{\link{NegativeBinomial}()}
 }
 \concept{discrete distributions}

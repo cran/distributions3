@@ -24,11 +24,11 @@ as priors in Bayesian contexts due to their heavy tails.
 }
 \details{
 We recommend reading this documentation on
-\url{https://alexpghayes.github.io/distributions3}, where the math
+\url{https://alexpghayes.github.io/distributions3/}, where the math
 will render with additional detail and much greater clarity.
 
 In the following, let \eqn{X} be a Cauchy variable with mean
-\code{location =} \eqn{x_0} and \code{scale} = \eqn{\gamma}.
+\verb{location =} \eqn{x_0} and \code{scale} = \eqn{\gamma}.
 
 \strong{Support}: \eqn{R}, the set of all real numbers
 
@@ -64,6 +64,11 @@ set.seed(27)
 X <- Cauchy(10, 0.2)
 X
 
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
+
 random(X, 10)
 
 pdf(X, 2)
@@ -76,12 +81,24 @@ cdf(X, quantile(X, 0.7))
 quantile(X, cdf(X, 7))
 }
 \seealso{
-Other continuous distributions: \code{\link{Beta}},
-  \code{\link{ChiSquare}}, \code{\link{Exponential}},
-  \code{\link{FisherF}}, \code{\link{Gamma}},
-  \code{\link{LogNormal}}, \code{\link{Logistic}},
-  \code{\link{Normal}}, \code{\link{StudentsT}},
-  \code{\link{Tukey}}, \code{\link{Uniform}},
-  \code{\link{Weibull}}
+Other continuous distributions: 
+\code{\link{Beta}()},
+\code{\link{ChiSquare}()},
+\code{\link{Erlang}()},
+\code{\link{Exponential}()},
+\code{\link{FisherF}()},
+\code{\link{Frechet}()},
+\code{\link{GEV}()},
+\code{\link{GP}()},
+\code{\link{Gamma}()},
+\code{\link{Gumbel}()},
+\code{\link{LogNormal}()},
+\code{\link{Logistic}()},
+\code{\link{Normal}()},
+\code{\link{RevWeibull}()},
+\code{\link{StudentsT}()},
+\code{\link{Tukey}()},
+\code{\link{Uniform}()},
+\code{\link{Weibull}()}
 }
 \concept{continuous distributions}

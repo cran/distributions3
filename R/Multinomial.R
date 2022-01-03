@@ -24,7 +24,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X = (X_1, ..., X_k)} be a Multinomial
@@ -55,7 +55,7 @@
 #'   **Moment generating function (m.g.f)**:
 #'
 #'   \deqn{
-#'     E(e^{tX}) = (\sum_{i=1}^k p_i e^{t_i} )^n
+#'     E(e^{tX}) = \left(\sum_{i=1}^k p_i e^{t_i}\right)^n
 #'   }{
 #'     E(e^(tX)) = (p_1 e^t_1 + p_2 e^t_2 + ... + p_k e^t_k)^n
 #'   }
@@ -73,6 +73,8 @@
 #' # log_pdf(X, 2)
 #'
 Multinomial <- function(size, p) {
+  # Ensure sum of probabilities is 1
+  p <- p / sum(p)
   d <- list(size = size, p = p)
   class(d) <- c("Multinomial", "multivariate", "distribution")
   d
@@ -80,14 +82,35 @@ Multinomial <- function(size, p) {
 
 #' @export
 print.Multinomial <- function(x, ...) {
-  cat(glue("Multinomial distribution (size = {x$size}, p = {x$p})\n"))
+
+  num_categories <- length(x$p)
+
+  if (num_categories > 3) {
+    p <- paste(
+      c(round(x$p, 3)[1:2], "...", round(x$p, 3)[num_categories]),
+      collapse = ", "
+    )
+  } else {
+    p <- paste(round(x$p, 3), collapse = ", ")
+  }
+  cat(glue("Multinomial distribution (size = {x$size}, p = [{p}])"), "\n")
+
 }
+
+#' @export
+mean.Multinomial <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$size * x$p
+}
+
+#' @export
+variance.Multinomial <- function(x, ...) x$size * x$p * (1 - x$p)
 
 #' Draw a random sample from a Multinomial distribution
 #'
 #' @inherit Multinomial examples
 #'
-#' @param d A `Multinomial` object created by a call to [Multinomial()].
+#' @param x A `Multinomial` object created by a call to [Multinomial()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -97,8 +120,8 @@ print.Multinomial <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.Multinomial <- function(d, n = 1L, ...) {
-  rmultinom(n = n, size = d$size, prob = d$size)
+random.Multinomial <- function(x, n = 1L, ...) {
+  rmultinom(n = n, size = x$size, prob = x$p)
 }
 
 #' Evaluate the probability mass function of a Multinomial distribution
@@ -108,8 +131,8 @@ random.Multinomial <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit Multinomial examples
-#' @inheritParams random.Multinomial
 #'
+#' @param d A `Multinomial` object created by a call to [Multinomial()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -121,11 +144,11 @@ random.Multinomial <- function(d, n = 1L, ...) {
 #' @export
 #'
 pdf.Multinomial <- function(d, x, ...) {
-  dmultinom(x = x, size = d$size, prob = d$size)
+  dmultinom(x = x, size = d$size, prob = d$p)
 }
 
 #' @rdname pdf.Multinomial
 #' @export
 log_pdf.Multinomial <- function(d, x, ...) {
-  dmultinom(x = x, size = d$size, prob = d$size, log = TRUE)
+  dmultinom(x = x, size = d$size, prob = d$p, log = TRUE)
 }

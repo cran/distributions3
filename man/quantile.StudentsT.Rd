@@ -4,18 +4,18 @@
 \alias{quantile.StudentsT}
 \title{Determine quantiles of a StudentsT distribution}
 \usage{
-\method{quantile}{StudentsT}(d, p, ...)
+\method{quantile}{StudentsT}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{StudentsT} object created by a call to \code{\link[=StudentsT]{StudentsT()}}.}
+\item{x}{A \code{StudentsT} object created by a call to \code{\link[=StudentsT]{StudentsT()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 Please see the documentation of \code{\link[=StudentsT]{StudentsT()}} for some properties
@@ -90,8 +90,9 @@ mean(x) + quantile(T, 0.12 / 2) * sd(x) / sqrt(nx)
 mean(x) + quantile(T, 1 - 0.12 / 2) * sd(x) / sqrt(nx)
 }
 \seealso{
-Other StudentsT distribution: \code{\link{cdf.StudentsT}},
-  \code{\link{pdf.StudentsT}},
-  \code{\link{random.StudentsT}}
+Other StudentsT distribution: 
+\code{\link{cdf.StudentsT}()},
+\code{\link{pdf.StudentsT}()},
+\code{\link{random.StudentsT}()}
 }
 \concept{StudentsT distribution}

@@ -15,7 +15,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   **Support**: \eqn{R^+}, the set of positive real numbers.
@@ -44,9 +44,10 @@ Tukey <- function(nmeans, df, nranges) {
 print.Tukey <- function(x, ...) {
   cat(
     glue(
-      "Tukey distribution (nmeans = {x$nmeans}",
+      "Tukey distribution (nmeans = {x$nmeans},",
       "df = {x$df}, nranges = {x$nranges})\n"
-    )
+    ),
+    "\n"
   )
 }
 
@@ -67,7 +68,7 @@ print.Tukey <- function(x, ...) {
 #' @export
 #'
 cdf.Tukey <- function(d, x, ...) {
-  ptukey(q = x, nmeans = d$nmeans, df = d$nmeans, nranges = d$nranges)
+  ptukey(q = x, nmeans = d$nmeans, df = d$df, nranges = d$nranges)
 }
 
 #' Determine quantiles of a Tukey distribution
@@ -75,15 +76,28 @@ cdf.Tukey <- function(d, x, ...) {
 #' @inherit Tukey examples
 #' @inheritParams cdf.Tukey
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family Tukey distribution
 #'
-quantile.Tukey <- function(d, p, ...) {
-  qtukey(p = p, nmeans = d$nmeans, df = d$nmeans, nranges = d$nranges)
+quantile.Tukey <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qtukey(p = probs, nmeans = x$nmeans, df = x$df, nranges = x$nranges)
+}
+
+
+#' Return the support of the Tukey distribution
+#'
+#' @param d An `Tukey` object created by a call to [Tukey()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Tukey <- function(d){
+  return(c(0, Inf))
 }

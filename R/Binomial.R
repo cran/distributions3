@@ -31,7 +31,7 @@
 #'   compute p-values.
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail.
 #'
 #'   In the following, let \eqn{X} be a Binomial random variable with parameter
@@ -75,6 +75,11 @@
 #' X <- Binomial(10, 0.2)
 #' X
 #'
+#' mean(X)
+#' variance(X)
+#' skewness(X)
+#' kurtosis(X)
+#'
 #' random(X, 10)
 #'
 #' pdf(X, 2L)
@@ -93,31 +98,56 @@ Binomial <- function(size, p = 0.5) {
 
 #' @export
 print.Binomial <- function(x, ...) {
-  cat(glue("Binomial distribution (size = {x$size}, p = {x$p})\n"))
+  cat(glue("Binomial distribution (size = {x$size}, p = {x$p})"), "\n")
+}
+
+#' @export
+mean.Binomial <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$size * x$p
+}
+
+#' @export
+variance.Binomial <- function(x, ...) x$size * x$p * (1 - x$p)
+
+#' @export
+skewness.Binomial <- function(x, ...) {
+  n <- x$size
+  p <- x$p
+  q <- 1 - x$p
+  (1 - (2 * p)) / sqrt(n * p * q)
+}
+
+#' @export
+kurtosis.Binomial <- function(x, ...) {
+  n <- x$size
+  p <- x$p
+  q <- 1 - x$p
+  (1 - (6 * p * q)) / (n * p * q)
 }
 
 #' Draw a random sample from a Binomial distribution
 #'
 #' @inherit Binomial examples
 #'
-#' @param d A `Binomial` object created by a call to [Binomial()].
+#' @param x A `Binomial` object created by a call to [Binomial()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return An integer vector containing values between `0` and `d$size`
+#' @return An integer vector containing values between `0` and `x$size`
 #'   of length `n`.
 #' @export
 #'
-random.Binomial <- function(d, n = 1L, ...) {
-  rbinom(n = n, size = d$size, prob = d$p)
+random.Binomial <- function(x, n = 1L, ...) {
+  rbinom(n = n, size = x$size, prob = x$p)
 }
 
 #' Evaluate the probability mass function of a Binomial distribution
 #'
 #' @inherit Binomial examples
-#' @inheritParams random.Binomial
 #'
+#' @param d A `Binomial` object created by a call to [Binomial()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -139,8 +169,8 @@ log_pdf.Binomial <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Binomial distribution
 #'
 #' @inherit Binomial examples
-#' @inheritParams random.Binomial
 #'
+#' @param d A `Binomial` object created by a call to [Binomial()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -160,15 +190,16 @@ cdf.Binomial <- function(d, x, ...) {
 #' @inherit Binomial examples
 #' @inheritParams random.Binomial
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
-quantile.Binomial <- function(d, p, ...) {
-  qbinom(p = p, size = d$size, prob = d$p)
+quantile.Binomial <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qbinom(p = probs, size = x$size, prob = x$p)
 }
 
 #' Fit a Binomial distribution to data
@@ -206,3 +237,14 @@ suff_stat.Binomial <- function(d, x, ...) {
   }
   list(successes = sum(x), experiments = length(x), trials = d$size)
 }
+
+
+#' Return the support of the Binomial distribution
+#'
+#' @param d An `Binomial` object created by a call to [Binomial()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Binomial <- function(d) c(0, d$size)
+

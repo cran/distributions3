@@ -18,7 +18,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Cauchy variable with mean
@@ -58,6 +58,11 @@
 #' X <- Cauchy(10, 0.2)
 #' X
 #'
+#' mean(X)
+#' variance(X)
+#' skewness(X)
+#' kurtosis(X)
+#'
 #' random(X, 10)
 #'
 #' pdf(X, 2)
@@ -76,14 +81,29 @@ Cauchy <- function(location = 0, scale = 1) {
 
 #' @export
 print.Cauchy <- function(x, ...) {
-  cat(glue("Cauchy distribution (location = {x$location}, scale = {x$scale})\n"))
+  cat(glue("Cauchy distribution (location = {x$location}, scale = {x$scale})"), "\n")
 }
+
+#' @export
+mean.Cauchy <- function(x, ...) {
+  ellipsis::check_dots_used()
+  NaN
+}
+
+#' @export
+variance.Cauchy <- function(x, ...) NaN
+
+#' @export
+skewness.Cauchy <- function(x, ...) NaN
+
+#' @export
+kurtosis.Cauchy <- function(x, ...) NaN
 
 #' Draw a random sample from a Cauchy distribution
 #'
 #' @inherit Cauchy examples
 #'
-#' @param d A `Cauchy` object created by a call to [Cauchy()].
+#' @param x A `Cauchy` object created by a call to [Cauchy()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -91,15 +111,15 @@ print.Cauchy <- function(x, ...) {
 #' @return A numeric vector of length `n`.
 #' @export
 #'
-random.Cauchy <- function(d, n = 1L, ...) {
-  rcauchy(n = n, location = d$location, scale = d$scale)
+random.Cauchy <- function(x, n = 1L, ...) {
+  rcauchy(n = n, location = x$location, scale = x$scale)
 }
 
 #' Evaluate the probability mass function of a Cauchy distribution
 #'
 #' @inherit Cauchy examples
-#' @inheritParams random.Cauchy
 #'
+#' @param d A `Cauchy` object created by a call to [Cauchy()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -122,8 +142,8 @@ log_pdf.Cauchy <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Cauchy distribution
 #'
 #' @inherit Cauchy examples
-#' @inheritParams random.Cauchy
 #'
+#' @param d A `Cauchy` object created by a call to [Cauchy()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -143,13 +163,26 @@ cdf.Cauchy <- function(d, x, ...) {
 #' @inherit Cauchy examples
 #' @inheritParams random.Cauchy
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
-quantile.Cauchy <- function(d, p, ...) {
-  qcauchy(p = p, location = d$location, scale = d$scale)
+quantile.Cauchy <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qcauchy(p = probs, location = x$location, scale = x$scale)
 }
+
+#' Return the support of the Cauchy distribution
+#'
+#' @param d An `Cauchy` object created by a call to [Cauchy()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Cauchy <- function(d){
+  c(-Inf, Inf)
+}
+

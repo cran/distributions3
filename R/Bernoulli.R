@@ -16,7 +16,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail.
 #'
 #'   In the following, let \eqn{X} be a Bernoulli random variable with parameter
@@ -73,6 +73,11 @@
 #' X <- Bernoulli(0.7)
 #' X
 #'
+#' mean(X)
+#' variance(X)
+#' skewness(X)
+#' kurtosis(X)
+#'
 #' random(X, 10)
 #' pdf(X, 1)
 #' log_pdf(X, 1)
@@ -81,6 +86,7 @@
 #'
 #' cdf(X, quantile(X, 0.7))
 #' quantile(X, cdf(X, 0.7))
+#'
 Bernoulli <- function(p = 0.5) {
   d <- list(p = p)
   class(d) <- c("Bernoulli", "distribution")
@@ -89,14 +95,37 @@ Bernoulli <- function(p = 0.5) {
 
 #' @export
 print.Bernoulli <- function(x, ...) {
-  cat(glue("Bernoulli distribution (p = {x$p})\n"))
+  cat(glue("Bernoulli distribution (p = {x$p})"), "\n")
+}
+
+#' @export
+mean.Bernoulli <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$p
+}
+
+#' @export
+variance.Bernoulli <- function(x, ...) x$p * (1 - x$p)
+
+#' @export
+skewness.Bernoulli <- function(x, ...) {
+  p <- x$p
+  q <- 1 - x$p
+  (1 - (2 * p)) / sqrt(p * q)
+}
+
+#' @export
+kurtosis.Bernoulli <- function(x, ...) {
+  p <- x$p
+  q <- 1 - x$p
+  (1 - (6 * p * q)) / (p * q)
 }
 
 #' Draw a random sample from a Bernoulli distribution
 #'
 #' @inherit Bernoulli examples
 #'
-#' @param d A `Bernoulli` object created by a call to [Bernoulli()].
+#' @param x A `Bernoulli` object created by a call to [Bernoulli()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -104,15 +133,15 @@ print.Bernoulli <- function(x, ...) {
 #' @return An integer vector of zeros and ones of length `n`.
 #' @export
 #'
-random.Bernoulli <- function(d, n = 1L, ...) {
-  rbinom(n = n, size = 1, prob = d$p)
+random.Bernoulli <- function(x, n = 1L, ...) {
+  rbinom(n = n, size = 1, prob = x$p)
 }
 
 #' Evaluate the probability mass function of a Bernoulli distribution
 #'
 #' @inherit Bernoulli examples
-#' @inheritParams random.Bernoulli
 #'
+#' @param d A `Bernoulli` object created by a call to [Bernoulli()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -135,8 +164,8 @@ log_pdf.Bernoulli <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Bernoulli distribution
 #'
 #' @inherit Bernoulli examples
-#' @inheritParams random.Bernoulli
 #'
+#' @param d A `Bernoulli` object created by a call to [Bernoulli()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -156,15 +185,16 @@ cdf.Bernoulli <- function(d, x, ...) {
 #' @inherit Bernoulli examples
 #' @inheritParams random.Bernoulli
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
-quantile.Bernoulli <- function(d, p, ...) {
-  qbinom(p = p, size = 1, prob = d$p)
+quantile.Bernoulli <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qbinom(p = probs, size = 1, prob = x$p)
 }
 
 #' Fit a Bernoulli distribution to data
@@ -196,3 +226,16 @@ suff_stat.Bernoulli <- function(d, x, ...) {
   if (any(!valid_x)) stop("`x` contains elements other than 0 or 1")
   list(successes = sum(x == 1), failures = sum(x == 0))
 }
+
+#' Return the support of the Bernoulli distribution
+#'
+#' @param d An `Bernoulli` object created by a call to [Bernoulli()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Bernoulli <- function(d){
+  return(c(0, 1))
+}
+
+

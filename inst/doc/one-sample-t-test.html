@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>One sample T-tests</title>
 
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +65,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -106,189 +124,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -321,13 +158,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>We have lots of data. How much? Many textbooks use 30 data points as a rule of thumb.</li>
 </ol>
 <p>Since we have a small sample, we let’s check if the data comes from a normal distribution using a normal quantile-quantile plot.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># read in the data</span></a>
-<a class="sourceLine" id="cb1-2" title="2">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3"></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co"># make the qqplot</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw">qqnorm</span>(x)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="kw">qqline</span>(x)</a></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># make the qqplot</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(x)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(x)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>Since the data lies close the line <span class="math inline">\(y = x\)</span>, and has no notable systematic deviations from line, it’s safe to treat the sample as coming from a normal distribution. We can proceed with our hypothesis test.</p>
 </div>
 <div id="null-hypothesis-and-test-statistic" class="section level2">
@@ -345,48 +182,54 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="calculating-p-values" class="section level2">
 <h2>Calculating p-values</h2>
 <p>In R this looks like:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb2-2" title="2"></a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co"># calculate the z-statistic</span></a>
-<a class="sourceLine" id="cb2-4" title="4">t_stat &lt;-<span class="st"> </span>(<span class="kw">mean</span>(x) <span class="op">-</span><span class="st"> </span><span class="dv">3</span>) <span class="op">/</span><span class="st"> </span>(<span class="kw">sd</span>(x) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n))</a>
-<a class="sourceLine" id="cb2-5" title="5">t_stat</a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; [1] 1.378916</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the z-statistic</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>t_stat <span class="ot">&lt;-</span> (<span class="fu">mean</span>(x) <span class="sc">-</span> <span class="dv">3</span>) <span class="sc">/</span> (<span class="fu">sd</span>(x) <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>t_stat</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.378916</span></span></code></pre></div>
 <p>Since the sample size is 10, to calculate a two-sided p-value, we need to find</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
   P(|t_9| \ge |1.38|)
   &amp;= P(t_9 \ge 1.38) + P(t_9 \le -1.38) \\
   &amp;= 1 - P(t_9 \le 1.38) + P(t_9 \le -1.38) \\
-\end{align}\]</span></p>
+\end{align}
+\]</span></p>
 <p>To do this we need to c.d.f. of a <span class="math inline">\(t_9\)</span> distribution.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(distributions3)</a>
-<a class="sourceLine" id="cb3-2" title="2"></a>
-<a class="sourceLine" id="cb3-3" title="3">T_<span class="dv">9</span> &lt;-<span class="st"> </span><span class="kw">StudentsT</span>(<span class="dt">df =</span> <span class="dv">9</span>)  <span class="co"># make a T_9 distribution</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="fl">1.38</span>) <span class="op">+</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="fl">-1.38</span>)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt; [1] 0.2008985</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(distributions3)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>T_9 <span class="ot">&lt;-</span> <span class="fu">StudentsT</span>(<span class="at">df =</span> <span class="dv">9</span>)  <span class="co"># make a T_9 distribution</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(T_9, <span class="fl">1.38</span>) <span class="sc">+</span> <span class="fu">cdf</span>(T_9, <span class="sc">-</span><span class="fl">1.38</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2008985</span></span></code></pre></div>
 <p>Note that we saved <code>t_stat</code> above so we could have also done</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="kw">abs</span>(t_stat)) <span class="op">+</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="op">-</span><span class="kw">abs</span>(t_stat))</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt; [1] 0.2012211</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(T_9, <span class="fu">abs</span>(t_stat)) <span class="sc">+</span> <span class="fu">cdf</span>(T_9, <span class="sc">-</span><span class="fu">abs</span>(t_stat))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2012211</span></span></code></pre></div>
 <p>which is slightly more accurate since there is no rounding error.</p>
 <p>So our p-value is about 0.20. You should verify this with a T-table. Note that you should get the <em>same</em> value from <code>cdf(T_9, 1.38)</code> and looking up <code>1.38</code> on a T-table.</p>
 <p>You may also have seen a different formula for the p-value of a two-sided T-test, which makes use of the fact that the T distribution is symmetric:</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
   P(|t_9| \ge |1.38|)
   &amp;= 2 \cdot P(t_9 \le -|1.38|)
-\end{align}\]</span></p>
+\end{align}
+\]</span></p>
 <p>Using this formula we get the same result:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="fl">-1.38</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt; [1] 0.2008985</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">cdf</span>(T_9, <span class="sc">-</span><span class="fl">1.38</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2008985</span></span></code></pre></div>
 <p>Finally, sometimes we are interest in one sided T-tests. For the test</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
   H_0: \mu \le 3 \qquad H_A: \mu &gt; 3
-\end{align}\]</span></p>
+\end{align}
+\]</span></p>
 <p>the p-value is given by</p>
 <p><span class="math display">\[
   P(t_9 &gt; 1.38)
 \]</span></p>
 <p>which we calculate with</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="fl">1.38</span>)</a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt; [1] 0.1004493</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(T_9, <span class="fl">1.38</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1004493</span></span></code></pre></div>
 <p>For the test</p>
 <p><span class="math display">\[
   H_0: \mu \ge 3 \qquad H_A: \mu &lt; 3
@@ -396,72 +239,74 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
   P(t_9 &lt; 1.38)
 \]</span></p>
 <p>which we calculate with</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">cdf</span>(T_<span class="dv">9</span>, <span class="fl">1.38</span>)</a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">#&gt; [1] 0.8995507</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cdf</span>(T_9, <span class="fl">1.38</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.8995507</span></span></code></pre></div>
 </div>
 <div id="using-the-t.test-function" class="section level2">
 <h2>Using the t.test() function</h2>
 <p>If you want to verify that your calculation is correct, R has a function <code>t.test()</code> that performs T-tests and calculates T confidence intervals for means.</p>
 <p>To get a T statistic, degrees of freedom of the sampling distribution, and the p-value we pass <code>t.test()</code> a vector of data. We tell <code>t.test()</code> our null hypothesis by passing the <code>mu</code> argument. In our case, we want to test <code>mu = 3</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">t.test</span>(x, <span class="dt">mu =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt; data:  x</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.2012</span></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is not equal to 3</span></a>
-<a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt; 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt;  2.0392 6.9608</span></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
-<a class="sourceLine" id="cb8-11" title="11"><span class="co">#&gt; mean of x </span></a>
-<a class="sourceLine" id="cb8-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">3</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  One Sample t-test</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data:  x</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.2012</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; alternative hypothesis: true mean is not equal to 3</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2.0392 6.9608</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean of x </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       4.5</span></span></code></pre></div>
 <p>If we don’t specify <code>mu</code>, <code>t.test()</code> assumes that we want to test the hypothesis <span class="math inline">\(H_0 : \mu = 0\)</span>. This looks like</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">t.test</span>(x)</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; data:  x</span></a>
-<a class="sourceLine" id="cb9-6" title="6"><span class="co">#&gt; t = 4.1367, df = 9, p-value = 0.002534</span></a>
-<a class="sourceLine" id="cb9-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is not equal to 0</span></a>
-<a class="sourceLine" id="cb9-8" title="8"><span class="co">#&gt; 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb9-9" title="9"><span class="co">#&gt;  2.0392 6.9608</span></a>
-<a class="sourceLine" id="cb9-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="co">#&gt; mean of x </span></a>
-<a class="sourceLine" id="cb9-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  One Sample t-test</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data:  x</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 4.1367, df = 9, p-value = 0.002534</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; alternative hypothesis: true mean is not equal to 0</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2.0392 6.9608</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean of x </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       4.5</span></span></code></pre></div>
 <p>We can also get one-sided p-values from <code>t.test()</code> by specifying the alternative hypothesis. For the test</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
   H_0: \mu \le 3 \qquad H_A: \mu &gt; 3
-\end{align}\]</span></p>
+\end{align}
+\]</span></p>
 <p>we would use</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">t.test</span>(x, <span class="dt">mu =</span> <span class="dv">3</span>, <span class="dt">alternative =</span> <span class="st">&quot;greater&quot;</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="co">#&gt; data:  x</span></a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.1006</span></a>
-<a class="sourceLine" id="cb10-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is greater than 3</span></a>
-<a class="sourceLine" id="cb10-8" title="8"><span class="co">#&gt; 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="co">#&gt;  2.505919      Inf</span></a>
-<a class="sourceLine" id="cb10-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
-<a class="sourceLine" id="cb10-11" title="11"><span class="co">#&gt; mean of x </span></a>
-<a class="sourceLine" id="cb10-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">3</span>, <span class="at">alternative =</span> <span class="st">&quot;greater&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  One Sample t-test</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data:  x</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.1006</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; alternative hypothesis: true mean is greater than 3</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2.505919      Inf</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean of x </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       4.5</span></span></code></pre></div>
 <p>For the test</p>
 <p><span class="math display">\[
   H_0: \mu \ge 3 \qquad H_A: \mu &lt; 3
 \]</span></p>
 <p>we would use</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">t.test</span>(x, <span class="dt">mu =</span> <span class="dv">3</span>, <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)</a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="co">#&gt;  One Sample t-test</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb11-5" title="5"><span class="co">#&gt; data:  x</span></a>
-<a class="sourceLine" id="cb11-6" title="6"><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.8994</span></a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="co">#&gt; alternative hypothesis: true mean is less than 3</span></a>
-<a class="sourceLine" id="cb11-8" title="8"><span class="co">#&gt; 95 percent confidence interval:</span></a>
-<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt;      -Inf 6.494081</span></a>
-<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; sample estimates:</span></a>
-<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; mean of x </span></a>
-<a class="sourceLine" id="cb11-12" title="12"><span class="co">#&gt;       4.5</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(x, <span class="at">mu =</span> <span class="dv">3</span>, <span class="at">alternative =</span> <span class="st">&quot;less&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  One Sample t-test</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data:  x</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; t = 1.3789, df = 9, p-value = 0.8994</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; alternative hypothesis: true mean is less than 3</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 95 percent confidence interval:</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      -Inf 6.494081</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean of x </span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       4.5</span></span></code></pre></div>
 <p>Both of these results agree with our hand calculations from earlier.</p>
 </div>
 

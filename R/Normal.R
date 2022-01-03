@@ -1,6 +1,6 @@
 #' Create a Normal distribution
 #'
-#' The Normal distribution is ubiquituous in statistics, partially because
+#' The Normal distribution is ubiquitous in statistics, partially because
 #' of the central limit theorem, which states that sums of i.i.d. random
 #' variables eventually become Normal. Linear transformations of Normal
 #' random variables result in new random variables that are also Normal. If
@@ -27,7 +27,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Normal random variable with mean
@@ -77,6 +77,11 @@
 #'
 #' X <- Normal(5, 2)
 #' X
+#'
+#' mean(X)
+#' variance(X)
+#' skewness(X)
+#' kurtosis(X)
 #'
 #' random(X, 10)
 #'
@@ -160,8 +165,23 @@ Normal <- function(mu = 0, sigma = 1) {
 
 #' @export
 print.Normal <- function(x, ...) {
-  cat(glue("Normal distribution (mu = {x$mu}, sigma = {x$sigma})\n"))
+  cat(glue("Normal distribution (mu = {x$mu}, sigma = {x$sigma})"), "\n")
 }
+
+#' @export
+mean.Normal <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$mu
+}
+
+#' @export
+variance.Normal <- function(x, ...) x$sigma ^ 2
+
+#' @export
+skewness.Normal <- function(x, ...) 0
+
+#' @export
+kurtosis.Normal <- function(x, ...) 0
 
 #' Draw a random sample from a Normal distribution
 #'
@@ -171,7 +191,7 @@ print.Normal <- function(x, ...) {
 #'
 #' @inherit Normal examples
 #'
-#' @param d A `Normal` object created by a call to [Normal()].
+#' @param x A `Normal` object created by a call to [Normal()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -180,8 +200,8 @@ print.Normal <- function(x, ...) {
 #' @export
 #'
 #'
-random.Normal <- function(d, n = 1L, ...) {
-  rnorm(n = n, mean = d$mu, sd = d$sigma)
+random.Normal <- function(x, n = 1L, ...) {
+  rnorm(n = n, mean = x$mu, sd = x$sigma)
 }
 
 #' Evaluate the probability mass function of a Normal distribution
@@ -191,8 +211,8 @@ random.Normal <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit Normal examples
-#' @inheritParams random.Normal
 #'
+#' @param d A `Normal` object created by a call to [Normal()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -217,8 +237,8 @@ log_pdf.Normal <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Normal distribution
 #'
 #' @inherit Normal examples
-#' @inheritParams random.Normal
 #'
+#' @param d A `Normal` object created by a call to [Normal()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -248,17 +268,18 @@ cdf.Normal <- function(d, x, ...) {
 #' @inherit Normal examples
 #' @inheritParams random.Normal
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family Normal distribution
 #'
-quantile.Normal <- function(d, p, ...) {
-  qnorm(p = p, mean = d$mu, sd = d$sigma)
+quantile.Normal <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qnorm(p = probs, mean = x$mu, sd = x$sigma)
 }
 
 #' Fit a Normal distribution to data
@@ -293,4 +314,19 @@ suff_stat.Normal <- function(d, x, ...) {
   valid_x <- is.numeric(x)
   if (!valid_x) stop("`x` must be a numeric vector")
   list(mu = mean(x), sigma = sd(x), samples = length(x))
+}
+
+#' Return the support of the Normal distribution
+#'
+#' @param d An `Normal` object created by a call to [Normal()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Normal <- function(d){
+  if(!is_distribution(d)){
+    message("d has to be a disitrubtion")
+    stop()
+  }
+  return(c(-Inf, Inf))
 }

@@ -15,7 +15,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Weibull random variable with
@@ -65,14 +65,42 @@ Weibull <- function(shape, scale) {
 
 #' @export
 print.Weibull <- function(x, ...) {
-  cat(glue("Weibull distribution (shape = {x$shape}, scale = {x$scale})\n"))
+  cat(glue("Weibull distribution (shape = {x$shape}, scale = {x$scale})"), "\n")
+}
+
+#' @export
+mean.Weibull <- function(x, ...) {
+  ellipsis::check_dots_used()
+  x$scale * gamma(1 + 1/x$shape)
+}
+
+#' @export
+variance.Weibull <- function(x, ...) {
+  x$scale^2 * gamma(1 + 2/x$shape) - mean(x)^2
+}
+
+#' @export
+skewness.Weibull <- function(x, ...) {
+  mu <- mean(x)
+  sigma <- sqrt(variance(x))
+  r <- mu / sigma
+  gamma(1 + 3/x$shape) * (x$scale/sigma)^3 - 3*r - 3^r
+}
+
+#' @export
+kurtosis.Weibull <- function(x, ...) {
+  mu <- mean(x)
+  sigma <- sqrt(variance(x))
+  gamma <- skewness(x)
+  r <- mu / sigma
+  (x$scale/sigma)^4 * gamma(1 + 4/x$shape) - 4*gamma*r -6*r^2 - r^4 - 3
 }
 
 #' Draw a random sample from a Weibull distribution
 #'
 #' @inherit Weibull examples
 #'
-#' @param d A `Weibull` object created by a call to [Weibull()].
+#' @param x A `Weibull` object created by a call to [Weibull()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -82,8 +110,8 @@ print.Weibull <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.Weibull <- function(d, n = 1L, ...) {
-  rweibull(n = n, shape = d$shape, scale = d$scale)
+random.Weibull <- function(x, n = 1L, ...) {
+  rweibull(n = n, shape = x$shape, scale = x$scale)
 }
 
 #' Evaluate the probability mass function of a Weibull distribution
@@ -93,8 +121,8 @@ random.Weibull <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit Weibull examples
-#' @inheritParams random.Weibull
 #'
+#' @param d A `Weibull` object created by a call to [Weibull()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -118,8 +146,8 @@ log_pdf.Weibull <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a Weibull distribution
 #'
 #' @inherit Weibull examples
-#' @inheritParams random.Weibull
 #'
+#' @param d A `Weibull` object created by a call to [Weibull()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -139,15 +167,26 @@ cdf.Weibull <- function(d, x, ...) {
 #' @inherit Weibull examples
 #' @inheritParams random.Weibull
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family Weibull distribution
 #'
-quantile.Weibull <- function(d, p, ...) {
-  qweibull(p = p, shape = d$shape, scale = d$scale)
+quantile.Weibull <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qweibull(p = probs, shape = x$shape, scale = x$scale)
 }
+
+
+#' Return the support of the Weibull distribution
+#'
+#' @param d An `Weibull` object created by a call to [Weibull()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.Weibull <- function(d) c(0, Inf)

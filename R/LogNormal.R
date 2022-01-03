@@ -17,7 +17,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3>, where the math
+#'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a LogNormal random variable with
@@ -31,7 +31,11 @@
 #'
 #'   **Probability density function (p.d.f)**:
 #'
-#'   \deqn{f(x) = \frac{1}{x\sigma\sqrt{2\pi}}\exp(-\frac{(\log x - \mu)^2}{2\sigma^2})}
+#'   \deqn{
+#'     f(x) = \frac{1}{x \sigma \sqrt{2 \pi}} \exp \left(-\frac{(\log x - \mu)^2}{2 \sigma^2} \right)
+#'   }{
+#'     f(x) = \frac{1}{x \sigma \sqrt{2 \pi}} \exp (-\frac{(\log x - \mu)^2}{2 \sigma^2})
+#'   }
 #'
 #'   **Cumulative distribution function (c.d.f)**:
 #'
@@ -64,14 +68,43 @@ LogNormal <- function(log_mu = 0, log_sigma = 1) {
 
 #' @export
 print.LogNormal <- function(x, ...) {
-  cat(glue("Lognormal distribution (log_mu = {x$log_mu}, log_sigma = {x$log_sigma})\n"))
+  cat(glue("Lognormal distribution (log_mu = {x$log_mu}, log_sigma = {x$log_sigma})"), "\n")
+}
+
+#' @export
+mean.LogNormal <- function(x, ...) {
+  ellipsis::check_dots_used()
+  mu <- x$log_mu
+  sigma <- x$log_sigma
+  exp(mu + sigma^2 / 2)
+}
+
+#' @export
+variance.LogNormal <- function(x, ...) {
+  mu <- x$log_mu
+  sigma <- x$log_sigma
+  (exp(sigma^2) - 1) * exp(2 * mu + sigma^2)
+}
+
+#' @export
+skewness.LogNormal <- function(x, ...) {
+  mu <- x$log_mu
+  sigma <- x$log_sigma
+  (exp(sigma^2) + 2) * sqrt(exp(sigma^2) - 1)
+}
+
+#' @export
+kurtosis.LogNormal <- function(x, ...) {
+  mu <- x$log_mu
+  sigma <- x$log_sigma
+  exp(4 * sigma^2) + 2 * exp(3 * sigma^2) + 3 * exp(2 * sigma^2) - 6
 }
 
 #' Draw a random sample from a LogNormal distribution
 #'
 #' @inherit LogNormal examples
 #'
-#' @param d A `LogNormal` object created by a call to [LogNormal()].
+#' @param x A `LogNormal` object created by a call to [LogNormal()].
 #' @param n The number of samples to draw. Defaults to `1L`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
@@ -81,8 +114,8 @@ print.LogNormal <- function(x, ...) {
 #' @return An integer vector of length `n`.
 #' @export
 #'
-random.LogNormal <- function(d, n = 1L, ...) {
-  rlnorm(n = n, meanlog = d$log_mu, sdlog = d$log_sigma)
+random.LogNormal <- function(x, n = 1L, ...) {
+  rlnorm(n = n, meanlog = x$log_mu, sdlog = x$log_sigma)
 }
 
 #' Evaluate the probability mass function of a LogNormal distribution
@@ -92,8 +125,8 @@ random.LogNormal <- function(d, n = 1L, ...) {
 #' showing to how calculate p-values and confidence intervals.
 #'
 #' @inherit LogNormal examples
-#' @inheritParams random.LogNormal
 #'
+#' @param d A `LogNormal` object created by a call to [LogNormal()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -117,8 +150,8 @@ log_pdf.LogNormal <- function(d, x, ...) {
 #' Evaluate the cumulative distribution function of a LogNormal distribution
 #'
 #' @inherit LogNormal examples
-#' @inheritParams random.LogNormal
 #'
+#' @param d A `LogNormal` object created by a call to [LogNormal()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
@@ -138,17 +171,18 @@ cdf.LogNormal <- function(d, x, ...) {
 #' @inherit LogNormal examples
 #' @inheritParams random.LogNormal
 #'
-#' @param p A vector of probabilites.
+#' @param probs A vector of probabilities.
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `p`.
+#' @return A vector of quantiles, one for each element of `probs`.
 #' @export
 #'
 #' @family LogNormal distribution
 #'
-quantile.LogNormal <- function(d, p, ...) {
-  qlnorm(p = p, meanlog = d$log_mu, sdlog = d$log_sigma)
+quantile.LogNormal <- function(x, probs, ...) {
+  ellipsis::check_dots_used()
+  qlnorm(p = probs, meanlog = x$log_mu, sdlog = x$log_sigma)
 }
 
 #' Fit a Log Normal distribution to data
@@ -184,4 +218,19 @@ suff_stat.LogNormal <- function(d, x, ...) {
   if (any(!valid_x)) stop("`x` must be a vector of positive real numbers")
   log_x <- log(x)
   list(mu = mean(log_x), sigma = sd(log_x), samples = length(x))
+}
+
+#' Return the support of the LogNormal distribution
+#'
+#' @param d An `LogNormal` object created by a call to [LogNormal()].
+#'
+#' @return A vector of length 2 with the minimum and maximum value of the support.
+#'
+#' @export
+support.LogNormal <- function(d){
+  if(!is_distribution(d)){
+    message("d has to be a disitrubtion")
+    stop()
+  }
+  return(c(0, Inf))
 }

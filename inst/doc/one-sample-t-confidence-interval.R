@@ -1,4 +1,4 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(distributions3)
 
 # read in the data
@@ -20,12 +20,17 @@ T_9 <- StudentsT(df = 9)
 mean(x) + quantile(T_9, 0.12 / 2) * sd(x) / sqrt(n)
 mean(x) + quantile(T_9, 1 - 0.12 / 2) * sd(x) / sqrt(n)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # second approach
 mean(x) - quantile(T_9, 1 - 0.12 / 2) * sd(x) / sqrt(n)
 mean(x) + quantile(T_9, 1 - 0.12 / 2) * sd(x) / sqrt(n)
 
-## ----echo = FALSE--------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
+got_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE)
+got_cowplot <- requireNamespace("cowplot", quietly = TRUE)
+got_ggplot2_and_cowplot <- got_ggplot2 * got_cowplot
+
+## ---- echo = FALSE, eval = got_ggplot2_and_cowplot----------------------------
 library(ggplot2)
 library(cowplot)
 
@@ -72,9 +77,9 @@ upper_quantile_plot <- ggplot(data = NULL) +
 
 cowplot::plot_grid(lower_quantile_plot, upper_quantile_plot)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 t.test(x, conf.level = 0.88)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 t.test(x)
 

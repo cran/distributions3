@@ -4,18 +4,18 @@
 \alias{quantile.Binomial}
 \title{Determine quantiles of a Binomial distribution}
 \usage{
-\method{quantile}{Binomial}(d, p, ...)
+\method{quantile}{Binomial}(x, probs, ...)
 }
 \arguments{
-\item{d}{A \code{Binomial} object created by a call to \code{\link[=Binomial]{Binomial()}}.}
+\item{x}{A \code{Binomial} object created by a call to \code{\link[=Binomial]{Binomial()}}.}
 
-\item{p}{A vector of probabilites.}
+\item{probs}{A vector of probabilities.}
 
 \item{...}{Unused. Unevaluated arguments will generate a warning to
 catch mispellings or other possible errors.}
 }
 \value{
-A vector of quantiles, one for each element of \code{p}.
+A vector of quantiles, one for each element of \code{probs}.
 }
 \description{
 \code{quantile()} is the inverse of \code{cdf()}.
@@ -26,6 +26,11 @@ set.seed(27)
 
 X <- Binomial(10, 0.2)
 X
+
+mean(X)
+variance(X)
+skewness(X)
+kurtosis(X)
 
 random(X, 10)
 

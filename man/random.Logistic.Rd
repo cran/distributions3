@@ -4,10 +4,10 @@
 \alias{random.Logistic}
 \title{Draw a random sample from a Logistic distribution}
 \usage{
-\method{random}{Logistic}(d, n = 1L, ...)
+\method{random}{Logistic}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{Logistic} object created by a call to \code{\link[=Logistic]{Logistic()}}.}
+\item{x}{A \code{Logistic} object created by a call to \code{\link[=Logistic]{Logistic()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -36,8 +36,9 @@ cdf(X, 4)
 quantile(X, 0.7)
 }
 \seealso{
-Other Logistic distribution: \code{\link{cdf.Logistic}},
-  \code{\link{pdf.Logistic}},
-  \code{\link{quantile.Logistic}}
+Other Logistic distribution: 
+\code{\link{cdf.Logistic}()},
+\code{\link{pdf.Logistic}()},
+\code{\link{quantile.Logistic}()}
 }
 \concept{Logistic distribution}

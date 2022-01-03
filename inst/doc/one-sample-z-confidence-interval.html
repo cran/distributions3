@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
 <title>Z confidence interval for a mean</title>
 
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +65,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -106,189 +124,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -330,26 +167,26 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
   0.88 = 1 - \alpha
 \]</span></p>
 <p>so that <span class="math inline">\(\alpha = 0.12\)</span>. Now we can get started.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(distributions3)</a>
-<a class="sourceLine" id="cb1-2" title="2"></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="co"># read in the data</span></a>
-<a class="sourceLine" id="cb1-4" title="4">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-5" title="5">n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</a>
-<a class="sourceLine" id="cb1-6" title="6"></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="co"># make a standard normal r.v.</span></a>
-<a class="sourceLine" id="cb1-8" title="8">Z &lt;-<span class="st"> </span><span class="kw">Normal</span>(<span class="dv">0</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb1-9" title="9"></a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="co"># first approach</span></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(Z, <span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; [1] 3.516675</span></a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(Z, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
-<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt; [1] 5.483325</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(distributions3)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">11</span>, <span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">2</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># make a standard normal r.v.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">Normal</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># first approach</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="sc">+</span> <span class="fu">quantile</span>(Z, <span class="fl">0.12</span> <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.516675</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="sc">+</span> <span class="fu">quantile</span>(Z, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.12</span> <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5.483325</span></span></code></pre></div>
 <p>So our confidence interval using the first set of equations is (3.52, 5.48). Now we use the second set of equations:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># second approach</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw">mean</span>(x) <span class="op">-</span><span class="st"> </span><span class="kw">quantile</span>(Z, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; [1] 3.516675</span></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="kw">mean</span>(x) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(Z, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.12</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)</a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; [1] 5.483325</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># second approach</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="sc">-</span> <span class="fu">quantile</span>(Z, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.12</span> <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.516675</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="sc">+</span> <span class="fu">quantile</span>(Z, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.12</span> <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 5.483325</span></span></code></pre></div>
 <p>We get the same thing! Just like we expected.</p>
 <p>There’s one last thing we need to address. You may not have seen either of the formulas for a Z-confidence interval that I wrote. You may have seen the formulas:</p>
 <p><span class="math display">\[
@@ -359,7 +196,6 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>If this is you, you have my condolences, and your instructor probably hates you. Ask that they use lower quantile notation rather than upper quantile notation.</p>
 <p>This looks almost like the second approach, except using <span class="math inline">\(z_{\alpha / 2}\)</span> instead of <span class="math inline">\(z_{1 - \alpha / 2}\)</span>. What this comes down to is whether or not <span class="math inline">\(z_{\alpha / 2}\)</span> represents a <em>lower quantile</em> or an <em>upper quantile</em>. For a lower quantile, you look at the p.d.f. and start integrating from negative infinity, stop when the integral equals <span class="math inline">\(\alpha\)</span>, and that take value to be the quantile. This is the only sane way to do things, although it requires being slightly more verbose so it can be inconvenient at times. Thus the upper quantile, in which case you do the same integration but start from positive infinity.</p>
 <p>The difference is easiest to understand with a picture:</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAC1lBMVEUAAAAAAA0AABcAACAAACEAACgAACoAADEAADoAAEkAAFYAAFgAAGYADQAADVEAFwAAF2YAICEAKAAAKDoAKHMAKIEAKJAAKjoAMVEAMZAAMlEANYQAOigAOjoAOmYAOnsAOpAARHkASUkASbYASpkAWGYAWLYAXqgAZoEAZpwAZp0AZrYNACgXAAAXADogAAAgADogIQAhAAAhADohIAAiAAAiAFYiKnkmACYmJl8mX5EoAAAoADooAGYqAAAxAA0xADoyAAAyAA0ykNs6AAA6ABc6ACA6ACE6ACg6ACo6ADI6ADo6AGY6KAA6KgA6OgA6Ojo6OpA6ZmY6e3w6fHs6f806gZA6kJ06kLw6kNs6nf89ADE9hdZEACZEAERJAABJtv9MAExNTU1NTW5NTY5NbqtNjshRMQBRe2ZRmM1RvP9WKgBWKjFWoNZYAABYZjpYtv9eqOtfkalmAABmADpmAGZmFwBmOgBmRwBmWABmZjpmgWZmnJBmnZBmtrZmtttmtv9m2/9tSgBtutZuTU1uTW5uTY5ubo5ubqtuq+R5RAB5qal72/98OgB8sc182/+B//+DaTGDutaEyeuOTU2OTW6OTY6Obk2OyP+QKgCQMgCQOgCQOjqQgTqQkDqQkGaQnWaQsc2QtpCQvJCQ27aQ29uQ2/+RqamZhVaZoHmZupmZuriZutac//+dOgCdkDqoXgCpkV+pqXmpqZGpqamrbk2rbm6ryKur5OSr5P+2SQC2WAC2ZgC2kDq2tma225C229u22/+2/7a2/9u2//+8kDq8//++voe+vr7Ijk3I///JhDXJ6+vbZhfbeyDbkCjbkDHbkDrbtmbb25Db/7bb/9vb///kq27k///rqF7ryYTr66jr6+v/gSj/nDr/nTr/tkn/tlj/tmb/vFH/yI7/22b/23v/23z/25D/27b/29v/5Kv//5z//7b//8j//9v//+T///9IW3u7AAAACXBIWXMAAA7DAAAOwwHHb6hkAAATnElEQVR4nO2diZ8jRRXHizvo6HqCqODIpRIFRFHxQNGg4gwKiEgUBQfBE1CDoIIQDsUFb1GEKMtyRJAggiuCRhEcNaAikWUWdb0iYnCdHfo/sF4dfXdVdfVLp/lY7/OZSaequuqXb786Ul3pIp4zpZFpC6i6OUAac4A05gBpzAHSmAOkMQdIYw6QxiwADWcWLQoaz4fPWunMLsFf/jySZ0o9y60mD+gTos4Z8snWs9Kph2JKAxQ9yw4Q5KEHNCKE1NNOj5yRracSgKQouzx0gNoG+WTrwQS03CJEXFUaTpoidxEMb4ak1mWF0sva5FeXJ4v4AQ2e+QU9kwdxhaGkf2BHPI/gTFmK0MPe3tlq/piwYIqL5QBn+jLhbe0aeHkxCeyFrIDXQa5CCH3ZBmKO7swWAsQVUAIsqA+OPW40g+CVzs4N3hwIQEOuqB0DxIJ3OT0CKJRUHMUARQsXb7dtHPEK+rLlORTKEQ0B4AwSgCFkh/vjgISd3Zn9JRfyTD/s0EKAqOI2fJLZpXGjTRUdRiNGtS4PHjfg85Jm+KyVDpzKY0KAllsMJgkDCicljFc92gYFpQy5s5KzWk2gSi//KTQx9ZrndWZuJPVxYxVPuUfj6A55e0vkcy/1qZVO7cC699A+pL7SeSLZq7PLyVwIwHzs6ezUQoBAHbV+rbtMix3PraHZ94FWUyTjnzJ6Frh7DBA/QXILGgGZFM5cbsUABaUMBUpog/pkJ1pN2v2ZxeUWy70vKipNWTuQrOIiZBsEBTyX/m1Ple5y8l6dpx3EhRDxQkhRQKw1HHEuw9n1rSaIFFWfgC8Fjan4GCwmBoi3qivRNiiSVFa7EKCgFJFzG8r+O9kTshuKa9YgIat9Ev6z1hIAUV7SnkBzfNYX9uo8mQu5lL6IU9EA0b8+9dM6BGUDgivWZs6gBRRNqgYE3QAtGHwqAgjyOKV2dctP+e/9CGutIZ/f08OzaNRu3n8bSUBw6qE0A6wqRj/JWa22N5z9KY0T3Lxodzz0YxJtEK8trBL1ZXWKJk0BFJQyghpBUw7px+NV7OwOq2L3NWjDPnN7g4T19Ok7yOcechw96cwGtEESEK9iFE6TOSS93E+awWmkob+aAz96Sx2C4ZJC0xEBRAMZUVq+bGZFLMuHt8V9eRRNKgGxNlSeLUsZN0RfR50JGhy/kX4rQKNtzON4ym2g116CPODvHuprUI9ow0Ae/ysOaJeTeU6ryJmNvTpw6ipiA0i4bKg/h0Behdqe7HHZyCUEiHXRPCYGiJ/A4I54P1v3okmDrj/ezYP3SEEEuvmdG0SMg3aWLdCO/OXojsiR5XNvqHWSgNh4iBa/qx+zYzFA7BJwf2JXnF9V0cC2o1WMeQNUbdpacd8KxdIT2ECRZT57vxxs+kmDASiNlGfKUsTRVvuxgSIM8nZgw8g6507zuJ2nZNDrQsv6FuMJXfpptRsEoCUhhDfR29JTb6zOt/noCN/SWEMWO7I0occByjIHSGMOkMYqB6ii5gBpzAHSmAOkMQdIYw6QxhwgjTlAGssPaDzX9Y8fvsM8LZi4x5EVzWwUux8Tfx/PP0VPIl95K5FGwJfgphfM6l3VIP59xjQ9hQClfsCMtGDLrbYqmlseQIZ6hjABUGcJrmGTAf4t2I94o9AttqkDiqcvCRC7Liyb8dwV4MIiy9HW+3a9YegbCRqg8dyV1DHbMGvC7+fxiVJSu3J+cTx/OWGzfBAnS4Q0fA6dyxFTOeO5NXxKRyRneawRt/hknmvEhBPLN14Yzf+hfQjZBvQc1SBSz5bn8CyP4nq2PMfXcwXj9Kb3USUrl8H0UL+p1mMHqAHTcjNMH5/qg7kwuIMJaOrimokEnpyPr/u82CubZuf5yOQyj3ienGndSxY21125bJsuzCqPD6rdMH41P3f82p3uO6TR9P71AqZnNHNnq73cOgXSMw/6B9mNZrVr7Spokg6jDdErs/VYAmoLT+pyd6U5jsRdYBb3nyXPT+AJlx75vPyVFTIfmVzmEc/TT5sojJ5DP924AeXu3R2//kUsj/EhjTPfGOgZzfx8iZ51JOi5Gu6TXEqOg2a6zj4KdZR/Pv/LmXosq1jXfxUTsM0hmwWdlxBGbLZTvmFxPi/Wq9R9T4J/PLnMI56n73UphY2e/hoGZvyGfdmrTPI9Vql5ErjjK/VA5fz21l/yqHu9Q+pZPjZbT3FAoheIAGI3k0MeFAfEarfwKCaaJ/cBxfIMACULSwCiUVzXeoriVYtj7je1q1uf9gX8FQD9jbZMEhDUwAw9hQGNxMgmUo0YkVHgQaLriPQSVJXMRyaXecTz9AGlFAZd0fhgeigAjfhnY0lEM7XcOmN2aTTzM9BzFWTzu60+T//RNkvU6uVTu5l6CgGCxozfgoE7mX67yT/IuOEDijfSosv185HJYRaQN9Iyz3rQSM91vbTCeCO9pweAllt7s7u544NrV2x/rGik6Xn9HWvXdPZgeq4BGY1DqZ7Tngp5rnRos/OX2g2ZegoBYite+C07v0vmEGgjQ526He3mg3EGr+JeKB+WPNLNh/L0AaUVxrr5LgPk/YTsyZJs8UFWxBbvF3pgCQMt4M1H8pE0W0mzio9C4D27H5ahB/e7WHhYOnEzKAxBDxqgUa2LM++OVBiWHjwPGhLd2klEMygMSY+b7tCYA6QxB0hjDpDGHCCNOUAaswO00fpo3TplMkuboB4HSKPHAdLocYA0ehwgjR4HSKNHBWjzxQsnPCCOH/nhN8sRVDU9CkCgYcOJ4s2GhakDmo4eBaDN37jb2/TZu9nxpgsusRA0GOQXVDU9CkCbPveAt/nrt8HhI7fc6rv0RmMbUIuHrVuXkThbx3T1KAA9eIIvaMNqmzoPguJhBTxoOnqMPIgeWQgaIAOajh6jNmjDAtjq3IJ6a31FqG2QrR5vY349yl5sddBr5L9iA2xAxfUgAxLjDn7RbAT1cAEV1uNhA8o2Y0A9qQgDUFE9cJRbjwOk0eMAafRMDNCgYoAG1QPUqxggr5KAJKGqAPLy6nGANHocII2eCfZi1QLkVQ2Q8yD1EeNTIUBchgPkANnrEUeVA9TzpZkJmpie5JGRHgdIoyc/INMJ8rXCohPlBSbtC+pJHhnpmVw3Xy0P8lwV0+lJHhnpmRAgzqc6gEJ9lwOUrscPc4DS9fhhlQPUk9+CzARNSk8Qlk+PA6TR4wBp9DhAGj0TGwdVC5BXNUDOg9RHgk9lAEVu9jhAaXpCYRUENKgYoDx6SgDUqxggzwFK0RMOqwAgr2KAvMkACla2P7iw8N67cwiajAcV0RMOwwIUrGyHVW/+6kADQYPBdfuzh9S8DRNQET1iF4iPsvdYgMIr273QkYkg4HL9h3ZH9aAieuBlpVPH9aDQynZq/hUzmiGH2fpPPOWLyWl7nJX2ufXA/+8/47fht4Z6zFbae5vOP/62UJSJB33lMefRNuhaQo5hC3D78PS0Id8soM+e1LbR3/rgOXo6BfV4/FFfG+GhMG2mZyS3AWCbVWTrMfag4MhEUK937XYn0Ub6u+886bqXnEcF/XF2aeVbXerSN80vsoP8VayIHvFspo3Lp3bH84v0/Z/ZwbC+7gedtlKPcRvk3RVamKwHxPj01l730q9e/+GTqKDfwP4X9G/dhW350K28HlREj3h21cbx4XCd6Ps/HS4u2LphU6nHaKV92LnNBF23/zGsm792917v3GOEB8EDMG86YMkb7dwAx87fi9nrERvdbBxBhWqDHnZAAd388UWlHrOV9hsWFvLV+XPZldjuAz4g2gbVPkUBXfhyjz1FcNi2HQdZ6enzB7d+LQHo5nd11XomMpKW48RQFYNYKmj53RfxNLS6lTeSDn6AEK9i45d9TKNnwoCCRrrON+884Du0vYTHaVp4UAE98ijWSI/nL1qn0TNhQKyb7/36PYu8m/dGz4aBWZ89KHUagFg374EedtD3hx2ZeiYBaBACJIfS0/yyOggBEgEoI+kCgnoVAxQLc4DiemJhDlBcTyyscoAooUoB8nLocYA0ehwgjR4HSKPHAdLocYA0esKA2JPKUQThAMLTEw+z9qC+v4tLAUEDPA/C0hMPK1DFxNY3xQT1sAAh6UmEFWqDQJJqtxjDexoRC+4j5L+rgaBHEZT7rsaQT/NrHLs8D0LRkwiz9SCYtGZzt7oNh/IC8n8+nw8Qlh5FWM5eTKPDVBASIDQ9irCcgIwul14QGiAkPYowBwgPULCtvX4vgTIAIepRhNl4kIGV6kHF9SjCpvFdDK8Xw9KjCDMHxLeQYlaszg9wAGHqScZO04PoQLpSHhQMCh2gDD14gORObQUFoQFC0oMHqF+HdVjDYt1qKiCfUC5ASHrSYo31xLp52HCq4MAMDxCWHkxAsDdelQCh6EEDtNJpwkq1flWqGJYeNECwg29dO/eiETRAbIOQ9OABilmw9H/T+Qumz5CHZwBjAcLRkxqLAShY+g8LJjd9xmzR5OQA2epBBCR+0SAaxWDZ7YMgy3DZLSYgHD14gGKbSmYs3NZOkSem7MPT9nkm7ZH0KINzTdrHphciq5FhkXJg5XgQkh5MD4oICl+xzReH9ZQECEkPYhsUHZKFlv5vOj/cZ9gAkg9vz9UG4ehJjzXVE61ikfmXYOl/XE9JgJD04AGKm7/0n2/TUKgXs/IgHD2TA5Rt0wFkqQcT0JCQ9rDQ0H6ACghFDyKg/ux6PsNQRFAPDxCKnoxYu0a6DUOPQtMLCkADI0HoejIBmekpDVCvYoA8C0DeEFwa5qiKCMIDhKMHExD8WMhkQVdZgFD0oAIytbIAYehxgDR6EAExhyYmCwZUAzM8QDh60ACtdFhvsdwqODDDAoSlBw2QHLGyn7fbCpKbRSAAQtKTGZsXUDD5YjC2LwEQlp7M2LyAgum7IgMzPEBYejJjHSCuJzN2YoBspuyDeXvjSXssPZo480n7iXsQd6HqeJBnpicEyF9VWhFAOHqyY3MCymUlAMLSkx3rAHkOkIGe7NhpABpUDNCgeoASWKYMSBHrAD3aADFCFQLkGelxgDR6HCCNHuxuvlqAvKoBch6kFhTeTaMKgMTtZQfIAbLWo4p1gB51gIBQlQB5JnrMfooQe4R89jWZKCALPcrYooCCpf+wT4PJNg2T9SAbParYwoBCy27vOv5HBlcsupsGOiALPapYrzCgyNL/wKXtbmnI+xpYuyKY6cmOkwmwdkUwqvNaD6IuVMCDLPSoYsEM9OT3IJWgiQKy0KOKBSsGKLILQQUAWehRxYIVAxQs/TcU5E0WkIUeZaxXFFBoF4JKeJCFHlUsWEFA2ZZaZPxB7eiAcutRxbL/DlB2LPtfOUC9igHyHKDMWP7iAGXG8hcHKDOWv5QJKLHdyJQBJbYbSTsqF1AmlikBUsVWFVCvYoDKnHJ1gLSCHCCNIAdIlVfKk+ynCijlSfbTBqTAEgak1G1pqXpUsSFAGj0OEDog2xl7blSQ7aR9Xj2aGXtuWj3Og0qqYqnPAJ4ioNRnAE8XkApLBJDqK5KlpelRYYkAUutxgMoBlPF4yakByni85DQBKbFEBoqqmw2WlqJHiSUMqKfW4wCVAijzsUpTApT5WKXEUWmA1Fii38UUy3YsLalHjSUCqKfU4wCVAWhQMUCD6gHSYIlNd2QvgLe0hJ6M7NMB9VR6HKASACl/iJkGKPsTWFpCT0b2GYB6Cj0IgAbqn7CUDmig/glL9KgcQFosiSnXrFbU0mJ6kmGZRxxQL1tPcUADG0BZQ11Li+lJhGUfCUC9TD2FAQ3068rSAGV83ba0qJ5EmOJIAupl6TH7KUL4RwDhHAYDozvyaYDSbzsozVBPIlMjQL0MPUY/RQj/CIDnMAjMBEvqbZ8gCzNAhnpMsKQB6qXrMVoGHFmAG/lshlgy7oslPpTSTPQYYkkFtLaXpsdoIXlkCXeOWwapdxEyIvSApqPH6KcIkR8BpF8J8yumTKay6ejJ70ETFlQ1PXZt0FQATUeP0U8RIj8CmLCgqukx+ylC1rijVEDT0TOBjWgnBmgqehwgjR47QP9H5gBpzAHSmAOkMQdIYw6QxhwgjTlAGnOANGYJCCY9oxbfPDc5cZyaKD2zCumxBLQhnm9i89zkxHFaovTMqqTHDtCmCy6JCUpsnpuctElLlJ5ZlfRYAXrkllvTakVkki857ZeWKDuzquixArRhdVqzEd08NzlxnJYoM7PK6MkL6K6FhRPptYjkAWGJzXPTr1g8EUtWBNDE9dh4EN/mNJZzYnPYlDqfTJSRWYX0YHXzyaISE8epelIzq5IeLECJzXPTxh0piVIzq5IeN5LWmAOkMQdIYw6QxhwgjTlAGnOANIYDaEgIqXVNUz98B0qhCkPUgwJoCFukjYy2jKU2njOWbmmYejAAiR0/+wY7xuoFIRiqHhxAcqtYVhb9N55bQwjVJ19pEkLqNGr+cmK4AXhV9KBUsZEswhfUmFlc6dQ9+Sr/xo16GVUMUw9SLwatYj0sqB15ZRtd0n/yPU6hpejB6+Zh1+rApbtsI1D5OgK3luFlAMLTgzgOChVYBUBIejAAiRLCgpjrzi/K1xEMSsClSwGEqgfFg/pQHjR6y60mfa1lN4riCmIUWpIevJE06zjGDULOOpV3q6yR5K9+t8ouVp8FTdIQ9Uzmu5j02rKaG50V0OMAacwB0pib7tCYA6QxB0hjDpDGHCCNOUAac4A09j9Hb/SXSgDMGAAAAABJRU5ErkJggg==" /><!-- --></p>
 <p>Note that <code>distributions</code> <strong>always</strong> returns a lower quantile from the <code>quantile()</code> function.</p>
 <p>If you are truly unfortunate, your instructor may use <span class="math inline">\(z_{\alpha / 2}\)</span> to mean lower tail quantiles at times and upper tail quantiles at other times. If this is the case, only god can help you.</p>
 

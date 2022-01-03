@@ -39,19 +39,22 @@ log_pdf(X, 1)
 
 cdf(X, 1)
 quantile(X, 0.5)
-\dontrun{
+
 # cdfs are only defined for numeric sample spaces. this errors!
-cdf(Y, "a")
+# cdf(Y, "a")
 
 # same for quantiles. this also errors!
-quantile(Y, 0.7)
-}
+# quantile(Y, 0.7)
 
 }
 \seealso{
-Other discrete distributions: \code{\link{Bernoulli}},
-  \code{\link{Binomial}}, \code{\link{Geometric}},
-  \code{\link{HyperGeometric}}, \code{\link{Multinomial}},
-  \code{\link{NegativeBinomial}}, \code{\link{Poisson}}
+Other discrete distributions: 
+\code{\link{Bernoulli}()},
+\code{\link{Binomial}()},
+\code{\link{Geometric}()},
+\code{\link{HyperGeometric}()},
+\code{\link{Multinomial}()},
+\code{\link{NegativeBinomial}()},
+\code{\link{Poisson}()}
 }
 \concept{discrete distributions}

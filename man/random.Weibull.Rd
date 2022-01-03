@@ -4,10 +4,10 @@
 \alias{random.Weibull}
 \title{Draw a random sample from a Weibull distribution}
 \usage{
-\method{random}{Weibull}(d, n = 1L, ...)
+\method{random}{Weibull}(x, n = 1L, ...)
 }
 \arguments{
-\item{d}{A \code{Weibull} object created by a call to \code{\link[=Weibull]{Weibull()}}.}
+\item{x}{A \code{Weibull} object created by a call to \code{\link[=Weibull]{Weibull()}}.}
 
 \item{n}{The number of samples to draw. Defaults to \code{1L}.}
 
@@ -37,7 +37,9 @@ quantile(X, 0.7)
 
 }
 \seealso{
-Other Weibull distribution: \code{\link{cdf.Weibull}},
-  \code{\link{pdf.Weibull}}, \code{\link{quantile.Weibull}}
+Other Weibull distribution: 
+\code{\link{cdf.Weibull}()},
+\code{\link{pdf.Weibull}()},
+\code{\link{quantile.Weibull}()}
 }
 \concept{Weibull distribution}
