@@ -16,325 +16,369 @@ is_distribution <- function(x) {
   inherits(x, "distribution")
 }
 
-#' Plot the CDF of a distribution
+
+# -------------------------------------------------------------------
+# HELPER FUNCTION FOR VECTORIZATION OF DISTRIBUTION OBJECTS
+# -------------------------------------------------------------------
+
+#' Utilities for `distributions3` objects
+#' 
+#' Various utility functions to implement methods for distributions with a
+#' unified workflow, in particular to facilitate working with vectorized
+#' `distributions3` objects.
+#' These are particularly useful in the computation of densities, probabilities, quantiles,
+#' and random samples when classical d/p/q/r functions are readily available for
+#' the distribution of interest.
 #'
-#' A function to easily plot the CDF of a distribution using `ggplot2`. Requires `ggplot2` to be loaded.
-#'
-#' @param d A `distribution` object
-#' @param limits either `NULL` (default) or a vector of length 2 that specifies the range of the x-axis
-#' @param p If `limits` is `NULL`, the range of the x-axis will be the support of `d` if this is a bounded
-#'   interval, or `quantile(d, p)` and `quantile(d, 1 - p)` if lower and/or upper limits of the support is
-#'   `-Inf`/`Inf`.  Defaults to 0.001.
-#' @param plot_theme specify theme of resulting plot using `ggplot2`. Default is `theme_minimal`
-#'
-#' @export
-plot_cdf <- function(d, limits = NULL, p = 0.001,
-                     plot_theme = NULL){
-
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("the ggplot2 package is needed. Please install it.", call. = FALSE)
-  }
-  if (is.null(plot_theme)) {
-    plot_theme <- ggplot2::theme_minimal
-  }
-  if(is.null(limits))
-    limits <- support(d)
-
-  if(limits[1] == -Inf){
-    limits[1] <- quantile(d, p = p)
-  }
-
-  if(limits[2] == Inf){
-    limits[2] <- quantile(d, p = 1-p)
-  }
-
-  if(class(d)[1] %in% c('Bernoulli', 'Binomial', 'Geometric', 'HyperGeometric',
-                        'NegativeBinomial', 'Poisson')){
-    plot_df <- data.frame(x = seq(limits[1], limits[2], by = 1))
-    plot_df$y <- cdf(d, plot_df$x)
-
-    out_plot <- ggplot2::ggplot(data = plot_df,
-           ggplot2::aes_string(x = "x", y = "y")) +
-      ggplot2::geom_bar(stat = 'identity', width = 1,
-                        ggplot2::aes(color = I("black"),
-                            fill = I("grey50"))) +
-      plot_theme()
-  }
-
-  if(class(d)[1] %in% c('Beta', 'Cauchy', 'ChiSquare', 'Exponential',
-                        'FisherF', 'Gamma', 'Logistic', 'LogNormal',
-                        'Normal', 'StudentsT', 'Tukey', 'Uniform', 'Weibull')){
-    plot_df <- data.frame(x = seq(limits[1], limits[2], length.out = 5000))
-    plot_df$y <- cdf(d, plot_df$x)
-
-    out_plot <- ggplot2::ggplot(data = plot_df,
-                    ggplot2::aes_string(x = "x", y = "y")) +
-      ggplot2::geom_line() +
-      plot_theme()
-  }
-
-  return(out_plot)
-
-}
-
-
-#' Plot the PDF of a distribution
-#'
-#' A function to easily plot the PDF of a distribution using `ggplot2`. Requires `ggplot2` to be loaded.
-#'
-#' @param d A `distribution` object
-#' @param limits either `NULL` (default) or a vector of length 2 that specifies the range of the x-axis
-#' @param p If `limits` is `NULL`, the range of the x-axis will be the support of `d` if this is a bounded
-#'   interval, or `quantile(d, p)` and `quantile(d, 1 - p)` if lower and/or upper limits of the support is
-#'   `-Inf`/`Inf`.  Defaults to 0.001.
-#' @param plot_theme specify theme of resulting plot using `ggplot2`. Default is `theme_minimal`
-#'
-#' @export
-plot_pdf <- function(d, limits = NULL, p = 0.001,
-                     plot_theme = NULL){
-
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("the ggplot2 package is needed. Please install it.", call. = FALSE)
-  }
-  if (is.null(plot_theme)) {
-    plot_theme <- ggplot2::theme_bw
-  }
-  if(is.null(limits))
-    limits <- support(d)
-
-  if(limits[1] == -Inf){
-    limits[1] <- quantile(d, p = p)
-  }
-
-  if(limits[2] == Inf){
-    limits[2] <- quantile(d, p = 1-p)
-  }
-
-  if(class(d)[1] %in% c('Bernoulli', 'Binomial', 'Geometric', 'HyperGeometric',
-                        'NegativeBinomial', 'Poisson')){
-    plot_df <- data.frame(x = seq(limits[1], limits[2], by = 1))
-    plot_df$y <- pdf(d, plot_df$x)
-
-    out_plot <- ggplot2::ggplot(data = plot_df,
-                       ggplot2::aes_string(x = "x", y = "y")) +
-     ggplot2::geom_bar(stat = 'identity', width = 1,
-               ggplot2::aes(color = I("black"),
-                   fill = I("grey50"))) +
-      #xlab("x") +
-      plot_theme()
-  }
-
-  if(class(d)[1] %in% c('Beta', 'Cauchy', 'ChiSquare', 'Exponential',
-                        'FisherF', 'Gamma', 'Logistic', 'LogNormal',
-                        'Normal', 'StudentsT', 'Tukey', 'Uniform', 'Weibull')){
-    plot_df <- data.frame(x = seq(limits[1], limits[2], length.out = 5000))
-    plot_df$y <- pdf(d, plot_df$x)
-
-    out_plot <- ggplot2::ggplot(data = plot_df,
-                    ggplot2::aes_string(x = "x", y = "y")) +
-      ggplot2::geom_line() +
-      plot_theme()
-  }
-
-  out_plot$mapping$d <- class(d)[1]
-
-  for(i in seq_along(d))
-    out_plot$mapping[[paste0("param", i)]] <- d[[i]]
-
-  return(out_plot)
-}
-
-
-#' @rdname geom_auc
-#' @export
-stat_auc <- function(mapping = NULL,
-                     data = NULL,
-                     geom = "auc",
-                     position = "identity",
-                     na.rm = FALSE,
-                     show.legend = NA,
-                     inherit.aes = TRUE,
-                     from = -Inf,
-                     to = Inf,
-                     annotate = FALSE,
-                     digits = 3,
-                     ...) {
-
-  ggplot2::layer(
-    geom = geom,
-    stat = StatAuc,
-    data = data,
-    mapping = mapping,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      na.rm = na.rm,
-      from = from,
-      to = to,
-      annotate = annotate,
-      digits = digits,
-      ...
-    )
-  )
-}
-
-
-#' @rdname geom_auc
-#' @format NULL
-#' @usage NULL
-#' @export
-StatAuc <- ggplot2::ggproto("StatAuc", ggplot2::Stat,
-
-  compute_group = function(data,
-                           scales,
-                           from = -Inf,
-                           to = Inf,
-                           annotate = FALSE,
-                           digits = 3) {
-
-
-    ## set data outside interval to zero
-    data[data$x < from | data$x > to, 'y'] <- 0
-
-    if (!isFALSE(annotate)) {
-      ## compute auc for label based on original implementation
-      n_params <- sum(grepl("param", names(data)))
-      d <- do.call(eval(parse(text = paste0("function(...) ", data$d[1], "(...)"))),
-                   args = lapply(paste0("param", 1:n_params), function(x) data[[x]][1]))
-
-      data$label <- paste0(
-        "P(", from, "< X < ", to, ") = ",
-        round(cdf(d, to) - cdf(d, from), digits = digits)
-      )
-    } else {
-      data$label <- NA
-    }
-
-    return(data)
-  },
-
-  required_aes = c("x", "y")
-)
-
-
-#' Fill out area under the curve for a plotted PDF
-#'
-#' @param from Left end-point of interval
-#' @param to Right end-point of interval
-#' @param annotate Should P() be added in the upper left corner as an annotation?
-#' Works also with a colour character, e.g., "red".
-#' @param digits Number of digits shown in annotation
-#' @inheritParams ggplot2::layer
-#' @inheritParams ggplot2::geom_area
-#'
-#' @export
+#' @param d A `distributions3` object.
+#' @param FUN Function to be computed. Function should be of type \code{FUN(at, d)}, where
+#' \code{at} is the argument at which the function should be evaluated (e.g., a quantile,
+#' probability, or sample size) and \code{d} is a \code{distributions3} object.
+#' @param at Specification of values at which `FUN` should be evaluated, typically a
+#' numeric vector (e.g., of quantiles, probabilities, etc.) but possibly also a matrix or data
+#' frame.
+#' @param drop logical. Should the result be simplified to a vector if possible (by
+#' dropping the dimension attribute)? If \code{FALSE} a matrix is always returned.
+#' @param type Character string used for naming, typically one of \code{"density"}, \code{"logLik"},
+#' \code{"probability"}, \code{"quantile"}, and \code{"random"}. Note that the \code{"random"}
+#' case is processed differently internally in order to vectorize the random number
+#' generation more efficiently.
+#' @param ... Arguments to be passed to  \code{FUN}.
+#' @param min,max Numeric vectors. Minima and maxima of the supports of a `distributions3` object.
+#' @param n numeric. Number of observations for computing random draws. If `length(n) > 1`,
+#' the length is taken to be the number required (consistent with base R as, e.g., for `rnorm()`).
 #'
 #' @examples
 #'
-#' X <- Normal()
-#'
-#' plot_pdf(X) + geom_auc(to = -0.645)
-#' plot_pdf(X) + geom_auc(from = -0.645, to = 0.1, annotate = TRUE)
-geom_auc <- function(mapping = NULL,
-                     data = NULL,
-                     stat = "auc",
-                     position = "identity",
-                     na.rm = FALSE,
-                     show.legend = NA,
-                     inherit.aes = TRUE,
-                     from = -Inf,
-                     to = Inf,
-                     annotate = FALSE,
-                     digits = 3,
-                     ...) {
+#' 
+#' ## Implementing a new distribution based on the provided utility functions
+#' ## Illustration: Gaussian distribution
+#' ## Note: Gaussian() is really just a copy of Normal() with a different class/distribution name
+#' 
+#' 
+#' ## Generator function for the distribution object.
+#' Gaussian <- function(mu = 0, sigma = 1) {
+#'   stopifnot(
+#'     "parameter lengths do not match (only scalars are allowed to be recycled)" =
+#'       length(mu) == length(sigma) | length(mu) == 1 | length(sigma) == 1
+#'   )
+#'   d <- data.frame(mu = mu, sigma = sigma)
+#'   class(d) <- c("Gaussian", "distribution")
+#'   d
+#' }
+#' 
+#' ## Set up a vector Y containing four Gaussian distributions:
+#' Y <- Gaussian(mu = 1:4, sigma = c(1, 1, 2, 2))
+#' Y
+#' 
+#' ## Extract the underlying parameters:
+#' as.matrix(Y)
+#' 
+#' 
+#' ## Extractor functions for moments of the distribution include
+#' ## mean(), variance(), skewness(), kurtosis().
+#' ## These can be typically be defined as functions of the list of parameters.
+#' mean.Gaussian <- function(x, ...) {
+#'   ellipsis::check_dots_used()
+#'   setNames(x$mu, names(x))
+#' }
+#' ## Analogously for other moments, see distributions3:::variance.Normal etc.
+#' 
+#' mean(Y)
+#' 
+#' 
+#' ## The support() method should return a matrix of "min" and "max" for the
+#' ## distribution. The make_support() function helps to set the right names and
+#' ## dimension.
+#' support.Gaussian <- function(d, drop = TRUE) {
+#'   stopifnot("d must be a supported distribution object" = is_distribution(d))
+#'   stopifnot(is.logical(drop))
+#' 
+#'   min <- rep(-Inf, length(d))
+#'   max <- rep(Inf, length(d))
+#' 
+#'   make_support(min, max, d, drop = drop)
+#' }
+#' 
+#' support(Y)
+#' 
+#' 
+#' ## Evaluating certain functions associated with the distribution, e.g.,
+#' ## pdf(), log_pdf(), cdf() quantile(), random(), etc. The apply_dpqr()
+#' ## function helps to call the typical d/p/q/r functions (like dnorm,
+#' ## pnorm, etc.) and set suitable names and dimension.
+#' pdf.Gaussian <- function(d, x, drop = TRUE, ...) {
+#'   FUN <- function(at, d) dnorm(x = at, mean = d$mu, sd = d$sigma, ...)
+#'   apply_dpqr(d = d, FUN = FUN, at = x, type = "density", drop = drop)
+#' }
+#' 
+#' ## Evaluate all densities at the same argument (returns vector):
+#' pdf(Y, 0)
+#' 
+#' ## Evaluate all densities at several arguments (returns matrix):
+#' pdf(Y, c(0, 5))
+#' 
+#' ## Evaluate each density at a different argument (returns vector):
+#' pdf(Y, 4:1)
+#' 
+#' 
+#' ## Drawing random() samples also uses apply_dpqr() with the argument
+#' ## n assured to be a positive integer.
+#' random.Gaussian <- function(x, n = 1L, drop = TRUE, ...) {
+#'   n <- make_positive_integer(n)
+#'   if (n == 0L) {
+#'     return(numeric(0L))
+#'   }
+#'   FUN <- function(at, d) rnorm(n = at, mean = d$mu, sd = d$sigma)
+#'   apply_dpqr(d = x, FUN = FUN, at = n, type = "random", drop = drop)
+#' }
+#' 
+#' ## One random sample for each distribution (returns vector):
+#' random(Y, 1)
+#' 
+#' ## Several random samples for each distribution (returns matrix):
+#' random(Y, 3)
+#' 
+#' 
+#' ## For further analogous methods see the "Normal" distribution provided
+#' ## in distributions3.
+#' methods(class = "Normal")
+#' 
+#' 
+#' @export
+apply_dpqr <- function(d,
+                       FUN,
+                       at,
+                       drop = TRUE,
+                       type = NULL,
+                       ...) {
 
-  ggplot2::layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomAuc,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      na.rm = na.rm,
-      from = from,
-      to = to,
-      annotate  = annotate,
-      digits = digits,
-      ...
-    )
+  ## sanity checks
+  stopifnot(
+    is_distribution(d),
+    is.function(FUN),
+    is.numeric(at),
+    is.logical(drop),
+    is.character(type)
+  )
+
+  ## basic properties:
+  ## rows n = number of distributions
+  ## columns k = number of arguments at || number of random replications
+  rnam <- names(d)
+  n <- length(d)
+  k <- if (type == "random") as.numeric(at) else length(at)
+
+  ## "at" names (if not dropped)
+  anam <- if ((k == 1L || n == 1L) && drop) {
+    NULL
+  } else if(type == "random") {
+    seq_len(k)
+  } else {
+    make_suffix(at, digits = pmax(3L, getOption("digits") - 3L))
+  }
+
+  ## handle different types of "at"
+  if (type != "random") {
+    if (k == 0L) {
+      return(matrix(numeric(0L), nrow = n, ncol = 0L, dimnames = list(rnam, NULL)))
+    } else if (k == 1L) {
+      at <- rep.int(as.vector(at), n)
+    } else if (k == n && is.null(dim(at))) {
+      k <- 1L
+    } else {
+      at <- as.vector(at)
+      k <- length(at)
+    }
+  }
+
+  ## columns names (if not dropped)
+  cnam <- if ((k == 1L || n == 1L) && drop) {
+    NULL
+  } else if (length(anam) > k) {
+    type
+  } else {
+    paste(substr(type, 1L, 1L), anam, sep = "_")
+  }
+
+  ## handle zero-length distribution vector
+  if (n == 0L) return(matrix(numeric(0L), nrow = 0L, ncol = k, dimnames = list(NULL, cnam)))
+
+  ## call FUN
+  if(type == "random") {
+    rval <- if (n == 1L) {
+      FUN(at, d = d, ...)
+    } else {
+      replicate(at, FUN(n, d = d))
+    }
+  } else {
+    rval <- if (k == 1L) {
+      FUN(at, d = d, ...)
+    } else {
+      vapply(at, FUN, numeric(n), d = d, ...)
+    }
+  }
+
+  ## handle dimensions
+  if (k == 1L && drop) {
+    rval <- as.vector(rval)
+    names(rval) <- rnam
+  } else if (n == 1L && drop) {
+    rval <- as.vector(rval)
+  } else {
+    dim(rval) <- c(n, k)
+    dimnames(rval) <- list(rnam, cnam)
+  }
+
+  return(rval)
+}
+
+
+# -------------------------------------------------------------------
+# METHODS FOR DISTRIBUTION OBJECTS
+# -------------------------------------------------------------------
+
+#' @export
+dim.distribution <- function(x) NULL
+
+#' @export
+length.distribution <- function(x) length(unclass(x)[[1L]])
+
+#' @export
+`[.distribution` <- function(x, i) {
+  cl <- class(x)
+  nm <- names(x)
+  class(x) <- "data.frame"
+  x <- x[i, , drop = FALSE]
+  class(x) <- cl
+  if (is.null(nm)) attr(x, "row.names") <- seq_along(x)
+  return(x)
+}
+
+#' @export
+format.distribution <- function(x, digits = pmax(3L, getOption("digits") - 3L), ...) {
+  cl <- class(x)[1L]
+  if (length(x) < 1L) {
+    return(character(0))
+  }
+  n <- names(x)
+  if (is.null(attr(x, "row.names"))) attr(x, "row.names") <- 1L:length(x)
+  class(x) <- "data.frame"
+  f <- sprintf("%s distribution (%s)", cl, apply(rbind(apply(as.matrix(x), 2L, format, digits = digits, ...)), 1L, function(p) paste(names(x), "=", as.vector(p), collapse = ", ")))
+  setNames(f, n)
+}
+
+#' @export
+print.distribution <- function(x, digits = pmax(3L, getOption("digits") - 3L), ...) {
+  if (length(x) < 1L) {
+    cat(sprintf("%s distribution of length zero\n", class(x)[1L]))
+  } else {
+    print(format(x, digits = digits), ...)
+  }
+  invisible(x)
+}
+
+#' @export
+names.distribution <- function(x) {
+  n <- attr(x, "row.names")
+  if (identical(n, seq_along(x))) NULL else n
+}
+
+#' @export
+`names<-.distribution` <- function(x, value) {
+  cl <- class(x)
+  class(x) <- "data.frame"
+  rownames(x) <- value
+  class(x) <- cl
+  return(x)
+}
+
+#' @export
+dimnames.distribution <- function(x) {
+  list(
+    attr(x, "rownames"),
+    names(unclass(x))
   )
 }
 
-#' @rdname geom_auc
-#' @format NULL
-#' @usage NULL
+## (a) Data frame of parameters
+as_data_frame_parameters <- function(x, ...) {
+  class(x) <- "data.frame"
+  return(x)
+}
+
+## (b) Data frame with distribution column
+as_data_frame_column <- function(x, ...) {
+  d <- data.frame(x = seq_along(x))
+  rownames(d) <- names(x)
+  d$x <- x
+  names(d) <- deparse(substitute(x))
+  return(d)
+}
+
+## Convention: "as.data.frame" uses version (b) and "as.matrix" uses version (a)
+
 #' @export
-GeomAuc <- ggplot2::ggproto("GeomAuc", ggplot2::GeomArea,
+as.data.frame.distribution <- as_data_frame_column
 
-  required_aes = c("x", "y", "label"),
+#' @export
+as.matrix.distribution <- function(x, ...) {
+  x <- as_data_frame_parameters(x, ...)
+  as.matrix(x)
+}
 
-  default_aes = ggplot2::aes(colour = NA, fill = "grey40", size = 0.5, linetype = 1,
-    alpha = NA),
+#' @export
+as.list.distribution <- function(x, ...) {
+  x <- as_data_frame_parameters(x, ...)
+  as.list(x)
+}
 
-  draw_panel = function(data,
-                        panel_params,
-                        coord,
-                        na.rm = FALSE,
-                        flipped_aes = FALSE,
-                        outline.type = c("both", "upper", "lower", "full"),
-                        parse = FALSE,
-                        check_overlab = FALSE,
-                        annotate = FALSE) {
+#' @export
+c.distribution <- function(...) {
+  x <- list(...)
+  cl <- class(x[[1L]])
+  x <- lapply(x, function(d) {
+    class(d) <- "data.frame"
+    d
+  })
+  x <- do.call("rbind", x)
+  class(x) <- cl
+  return(x)
+}
 
-    outline.type <- match.arg(outline.type)
+#' @export
+summary.distribution <- function(object, ...) {
+  cat(sprintf("%s distribution:", class(object)[1L]), "\n")
+  class(object) <- "data.frame"
+  summary(object, ...)
+}
 
-    if (!isFALSE(annotate)) {
-
-      annotate <- if (isTRUE(annotate)) "black" else annotate[1]
-
-      data_annotate <- data.frame(
-        x = -Inf,
-        y = Inf,
-        label = data$label[1],
-        colour = annotate,
-        size = 3.88 * data$size[1] * 2,
-        angle = 0,
-        hjust = -0.1,
-        vjust = 2,
-        alpha = NA,
-        family = "",
-        fontface = 1,
-        lineheight = 1.2
-      )
-
-      grid::grobTree(
-        ggplot2::GeomArea$draw_group(data,
-                                 panel_params,
-                                 coord,
-                                 na.rm = na.rm,
-                                 flipped_aes = flipped_aes,
-                                 outline.type = outline.type),
-        ggplot2::GeomText$draw_panel(data_annotate,
-                                     panel_params,
-                                     coord,
-                                     parse = parse,
-                                     na.rm = na.rm,
-                                     check_overlap = check_overlab)
-      )
-    } else {
-        ggplot2::GeomArea$draw_group(data,
-                                 panel_params,
-                                 coord,
-                                 na.rm = na.rm,
-                                 flipped_aes = flipped_aes,
-                                 outline.type = outline.type)
-    }
-
+make_suffix <- function(x, digits = 3L) {
+  rval <- format(x, digits = digits, trim = TRUE, drop0trailing = TRUE)
+  nok <- duplicated(rval)
+  while (any(nok) && digits < 10L) {
+    digits <- digits + 1L
+    rval[nok] <- format(x[nok], digits = digits, trim = TRUE, drop0trailing = TRUE)
+    nok <- duplicated(rval)
   }
+  nok <- duplicated(rval) | duplicated(rval, fromLast = TRUE)
+  if (any(nok)) rval[nok] <- make.unique(rval[nok], sep = "_")
+  return(rval)
+}
 
-)
+#' @rdname apply_dpqr
+#' @export
+make_support <- function(min, max, d, drop = TRUE) {
+  rval <- matrix(c(min, max), ncol = 2, dimnames = list(names(d), c("min", "max")))
+  if (drop && NROW(rval) == 1L) rval[1L, , drop = TRUE] else rval
+}
 
-
+#' @rdname apply_dpqr
+#' @export
+make_positive_integer <- function(n) {
+  n <- if (length(n) > 1L) length(n) else suppressWarnings(try(as.integer(n), silent = TRUE))
+  if (inherits(n, "try-error") || is.na(n) || n < 0L) {
+    stop("Invalid arguments")
+  }
+  n
+}

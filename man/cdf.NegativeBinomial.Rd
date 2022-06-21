@@ -4,7 +4,7 @@
 \alias{cdf.NegativeBinomial}
 \title{Evaluate the cumulative distribution function of a negative binomial distribution}
 \usage{
-\method{cdf}{NegativeBinomial}(d, x, ...)
+\method{cdf}{NegativeBinomial}(d, x, drop = TRUE, ...)
 }
 \arguments{
 \item{d}{A \code{NegativeBinomial} object created by a call to
@@ -13,11 +13,17 @@
 \item{x}{A vector of elements whose cumulative probabilities you would
 like to determine given the distribution \code{d}.}
 
-\item{...}{Unused. Unevaluated arguments will generate a warning to
-catch mispellings or other possible errors.}
+\item{drop}{logical. Should the result be simplified to a vector if possible?}
+
+\item{...}{Arguments to be passed to \code{\link[stats]{pnbinom}}.
+Unevaluated arguments will generate a warning to catch mispellings or other
+possible errors.}
 }
 \value{
-A vector of probabilities, one for each element of \code{x}.
+In case of a single distribution object, either a numeric
+vector of length \code{probs} (if \code{drop = TRUE}, default) or a \code{matrix} with
+\code{length(x)} columns (if \code{drop = FALSE}). In case of a vectorized distribution
+object, a matrix with \code{length(x)} columns containing all possible combinations.
 }
 \description{
 Evaluate the cumulative distribution function of a negative binomial distribution
@@ -26,16 +32,22 @@ Evaluate the cumulative distribution function of a negative binomial distributio
 
 set.seed(27)
 
-X <- NegativeBinomial(10, 0.3)
+X <- NegativeBinomial(size = 5, p = 0.1)
 X
 
 random(X, 10)
 
-pdf(X, 2)
-log_pdf(X, 2)
+pdf(X, 50)
+log_pdf(X, 50)
 
-cdf(X, 4)
+cdf(X, 50)
 quantile(X, 0.7)
+
+## alternative parameterization of X
+Y <- NegativeBinomial(mu = 45, size = 5)
+Y
+cdf(Y, 50)
+quantile(Y, 0.7)
 }
 \seealso{
 Other NegativeBinomial distribution: 

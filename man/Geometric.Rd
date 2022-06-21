@@ -69,16 +69,17 @@ log_pdf(X, 2)
 
 cdf(X, 4)
 quantile(X, 0.7)
-
 }
 \seealso{
 Other discrete distributions: 
 \code{\link{Bernoulli}()},
 \code{\link{Binomial}()},
 \code{\link{Categorical}()},
+\code{\link{HurdlePoisson}()},
 \code{\link{HyperGeometric}()},
 \code{\link{Multinomial}()},
 \code{\link{NegativeBinomial}()},
-\code{\link{Poisson}()}
+\code{\link{Poisson}()},
+\code{\link{ZIPoisson}()}
 }
 \concept{discrete distributions}

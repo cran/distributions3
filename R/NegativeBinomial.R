@@ -1,14 +1,16 @@
-#' Create a Negative Binomial distribution
+#' Create a negative binomial distribution
 #'
 #' A generalization of the geometric distribution. It is the number
-#' of successes in a sequence of i.i.d. Bernoulli trials before
-#' a specified number (\eqn{r}) of failures occurs.
+#' of failures in a sequence of i.i.d. Bernoulli trials before
+#' a specified target number (\eqn{r}) of successes occurs.
 #'
 #'
-#' @param size The number of failures (an integer greater than \eqn{0})
+#' @param size The target number of successes (greater than \eqn{0})
 #'   until the experiment is stopped. Denoted \eqn{r} below.
 #' @param p The success probability for a given trial. `p` can be any
 #'   value in `[0, 1]`, and defaults to `0.5`.
+#' @param mu Alternative parameterization via the non-negative mean
+#'   of the distribution (instead of the probability `p`), defaults to `size`.
 #'
 #' @return A `NegativeBinomial` object.
 #' @export
@@ -21,75 +23,125 @@
 #'   <https://alexpghayes.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
-#'   In the following, let \eqn{X} be a Negative Binomial random variable with
+#'   In the following, let \eqn{X} be a negative binomial random variable with
 #'   success probability `p` = \eqn{p}.
-#'
 #'
 #'   **Support**: \eqn{\{0, 1, 2, 3, ...\}}
 #'
-#'   **Mean**: \eqn{\frac{p r}{1-p}}
+#'   **Mean**: \eqn{\frac{(1 - p) r}{p} = \mu}
 #'
-#'   **Variance**: \eqn{\frac{pr}{(1-p)^2}}
+#'   **Variance**: \eqn{\frac{(1 - p) r}{p^2}}
 #'
-#'   **Probability mass function (p.m.f)**:
+#'   **Probability mass function (p.m.f.)**:
 #'
 #'   \deqn{
-#'      f(k) = {k + r - 1 \choose k} \cdot (1-p)^r p^k
+#'      f(k) = {k + r - 1 \choose k} \cdot p^r (1-p)^k
 #'   }{
-#'      f(k) = (k+r-1)!/(k!(r-1)!) (1-p)^r p^k
+#'      f(k) = (k+r-1)!/(k!(r-1)!) p^r (1-p)^k
 #'   }
 #'
-#'   **Cumulative distribution function (c.d.f)**:
+#'   **Cumulative distribution function (c.d.f.)**:
 #'
 #'   Omitted for now.
 #'
-#'   **Moment generating function (m.g.f)**:
+#'   **Moment generating function (m.g.f.)**:
 #'
 #'   \deqn{
-#'      \left(\frac{1-p}{1-pe^t}\right)^r, t < -\log p
+#'      \left(\frac{p}{1 - (1 -p) e^t}\right)^r, t < -\log (1-p)
 #'   }{
-#'      \frac{(1-p)^r}{(1-pe^t)^r}, t < -\log p
+#'      \frac{p^r}{(1 - (1-p) e^t)^r}, t < -\log (1-p)
 #'   }
+#'
+#'  **Alternative parameterization**: Sometimes, especially when used in
+#'  regression models, the negative binomial distribution is parameterized
+#'  by its mean \eqn{\mu} (as listed above) plus the size parameter \eqn{r}.
+#'  This implies a success probability of \eqn{p = r/(r + \mu)}. This can
+#'  also be seen as a generalization of the Poisson distribution where the
+#'  assumption of equidispersion (i.e., variance equal to mean) is relaxed.
+#'  The negative binomial distribution is overdispersed (i.e., variance greater than mean)
+#'  and its variance can also be written as \eqn{\mu + 1/r \mu^2}. The Poisson
+#'  distribution is then obtained as \eqn{r} goes to infinity. Note that in this
+#'  view it is natural to also allow for non-integer \eqn{r} parameters.
+#'  The factorials in the equations above are then expressed in terms of the
+#'  gamma function.
 #'
 #' @examples
 #'
 #' set.seed(27)
 #'
-#' X <- NegativeBinomial(10, 0.3)
+#' X <- NegativeBinomial(size = 5, p = 0.1)
 #' X
 #'
 #' random(X, 10)
 #'
-#' pdf(X, 2)
-#' log_pdf(X, 2)
+#' pdf(X, 50)
+#' log_pdf(X, 50)
 #'
-#' cdf(X, 4)
+#' cdf(X, 50)
 #' quantile(X, 0.7)
-NegativeBinomial <- function(size, p = 0.5) {
-  d <- list(size = size, p = p)
+#'
+#' ## alternative parameterization of X
+#' Y <- NegativeBinomial(mu = 45, size = 5)
+#' Y
+#' cdf(Y, 50)
+#' quantile(Y, 0.7)
+NegativeBinomial <- function(size, p = 0.5, mu = size) {
+  if(!missing(mu) && !missing(p)) stop("only one of the parameters 'p' or 'mu' must be specified")
+  if(missing(mu)) {
+    stopifnot("parameter 'size' must always be positive" = all(size > 0))
+    stopifnot("parameter 'p' must always be in [0, 1]" = all(p >= 0 & p <= 1))
+    stopifnot(
+      "parameter lengths do not match (only scalars are allowed to be recycled)" =
+        length(size) == length(p) | length(size) == 1L | length(p) == 1L
+    )
+    d <- data.frame(size = size, p = p)
+  } else {
+    stopifnot("parameter 'mu' must always be non-negative" = all(mu >= 0))
+    stopifnot("parameter 'size' must always be positive" = all(size > 0))
+    stopifnot(
+      "parameter lengths do not match (only scalars are allowed to be recycled)" =
+        length(size) == length(mu) | length(size) == 1L | length(mu) == 1L
+    )
+    d <- data.frame(mu = mu, size = size)
+  }
   class(d) <- c("NegativeBinomial", "distribution")
   d
 }
 
 #' @export
-print.NegativeBinomial <- function(x, ...) {
-  cat(glue("Negative Binomial distribution (size = {x$size}, p = {x$p})"), "\n")
-}
-
-#' @export
 mean.NegativeBinomial <- function(x, ...) {
   ellipsis::check_dots_used()
-  x$p * x$size / (1 - x$p)
+  rval <- if("mu" %in% names(unclass(x))) {
+    x$mu
+  } else {
+    x$size * (1 - x$p) / x$p
+  }
+  setNames(rval, names(x))
 }
 
 #' @export
-variance.NegativeBinomial <- function(x, ...) (x$p * x$size) / (1 - x$p)^2
+variance.NegativeBinomial <- function(x, ...) {
+  rval <- if("mu" %in% names(unclass(x))) {
+    x$mu + 1/x$size * x$mu^2
+  } else {
+    x$size * (1 - x$p)/ x$p^2
+  }
+  setNames(rval, names(x))
+}
 
 #' @export
-skewness.NegativeBinomial <- function(x, ...) (1 + x$p) / sqrt(x$p * x$size)
+skewness.NegativeBinomial <- function(x, ...) {
+  if("mu" %in% names(unclass(x))) x$p <- x$size/(x$size + x$mu)
+  rval <- (2 - x$p) / sqrt((1 - x$p) * x$size)
+  setNames(rval, names(x))
+}
 
 #' @export
-kurtosis.NegativeBinomial <- function(x, ...) 6 / x$size + (1 - x$p)^2 / x$size * x$p
+kurtosis.NegativeBinomial <- function(x, ...) {
+  if("mu" %in% names(unclass(x))) x$p <- x$size/(x$size + x$mu)
+  rval <- 6 / x$size + x$p^2 / x$size * (1 - x$p)
+  setNames(rval, names(x))
+}
 
 #' Draw a random sample from a negative binomial distribution
 #'
@@ -98,16 +150,28 @@ kurtosis.NegativeBinomial <- function(x, ...) 6 / x$size + (1 - x$p)^2 / x$size 
 #' @param x A `NegativeBinomial` object created by a call to
 #'   [NegativeBinomial()].
 #' @param n The number of samples to draw. Defaults to `1L`.
+#' @param drop logical. Should the result be simplified to a vector if possible?
 #' @param ... Unused. Unevaluated arguments will generate a warning to
 #'   catch mispellings or other possible errors.
 #'
 #' @family NegativeBinomial distribution
 #'
-#' @return An integer vector of length `n`.
+#' @return In case of a single distribution object or `n = 1`, either a numeric
+#'   vector of length `n` (if `drop = TRUE`, default) or a `matrix` with `n` columns
+#'   (if `drop = FALSE`).
 #' @export
 #'
-random.NegativeBinomial <- function(x, n = 1L, ...) {
-  rnbinom(n = n, size = x$size, prob = x$p)
+random.NegativeBinomial <- function(x, n = 1L, drop = TRUE, ...) {
+  n <- make_positive_integer(n)
+  if (n == 0L) {
+    return(numeric(0L))
+  }
+  FUN <- if("mu" %in% names(unclass(x))) {
+    function(at, d) rnbinom(n = at, mu = d$mu, size = d$size)
+  } else {
+    function(at, d) rnbinom(n = at, size = d$size, prob = d$p)
+  }
+  apply_dpqr(d = x, FUN = FUN, at = n, type = "random", drop = drop)
 }
 
 #' Evaluate the probability mass function of a NegativeBinomial distribution
@@ -118,23 +182,38 @@ random.NegativeBinomial <- function(x, n = 1L, ...) {
 #'   [NegativeBinomial()].
 #' @param x A vector of elements whose probabilities you would like to
 #'   determine given the distribution `d`.
-#' @param ... Unused. Unevaluated arguments will generate a warning to
-#'   catch mispellings or other possible errors.
+#' @param drop logical. Should the result be simplified to a vector if possible?
+#' @param ... Arguments to be passed to \code{\link[stats]{dnbinom}}.
+#'   Unevaluated arguments will generate a warning to catch mispellings or other
+#'   possible errors.
 #'
 #' @family NegativeBinomial distribution
 #'
-#' @return A vector of probabilities, one for each element of `x`.
+#' @return In case of a single distribution object, either a numeric
+#'   vector of length `probs` (if `drop = TRUE`, default) or a `matrix` with
+#'   `length(x)` columns (if `drop = FALSE`). In case of a vectorized distribution
+#'   object, a matrix with `length(x)` columns containing all possible combinations.
 #' @export
 #'
-pdf.NegativeBinomial <- function(d, x, ...) {
-  dnbinom(x = x, size = d$size, prob = d$p)
+pdf.NegativeBinomial <- function(d, x, drop = TRUE, ...) {
+  FUN <- if("mu" %in% names(unclass(d))) {
+    function(at, d) dnbinom(x = at, mu = d$mu, size = d$size, ...)
+  } else {
+    function(at, d) dnbinom(x = at, size = d$size, prob = d$p, ...)
+  }
+  apply_dpqr(d = d, FUN = FUN, at = x, type = "density", drop = drop)
 }
 
 #' @rdname pdf.NegativeBinomial
 #' @export
 #'
-log_pdf.NegativeBinomial <- function(d, x, ...) {
-  dnbinom(x = x, size = d$size, prob = d$p, log = TRUE)
+log_pdf.NegativeBinomial <- function(d, x, drop = TRUE, ...) {
+  FUN <- if("mu" %in% names(unclass(d))) {
+    function(at, d) dnbinom(x = at, mu = d$mu, size = d$size, log = TRUE)
+  } else {
+    function(at, d) dnbinom(x = at, size = d$size, prob = d$p, log = TRUE)
+  }
+  apply_dpqr(d = d, FUN = FUN, at = x, type = "logLik", drop = drop)
 }
 
 #' Evaluate the cumulative distribution function of a negative binomial distribution
@@ -145,16 +224,26 @@ log_pdf.NegativeBinomial <- function(d, x, ...) {
 #'   [NegativeBinomial()].
 #' @param x A vector of elements whose cumulative probabilities you would
 #'   like to determine given the distribution `d`.
-#' @param ... Unused. Unevaluated arguments will generate a warning to
-#'   catch mispellings or other possible errors.
+#' @param drop logical. Should the result be simplified to a vector if possible?
+#' @param ... Arguments to be passed to \code{\link[stats]{pnbinom}}.
+#'   Unevaluated arguments will generate a warning to catch mispellings or other
+#'   possible errors.
 #'
 #' @family NegativeBinomial distribution
 #'
-#' @return A vector of probabilities, one for each element of `x`.
+#' @return In case of a single distribution object, either a numeric
+#'   vector of length `probs` (if `drop = TRUE`, default) or a `matrix` with
+#'   `length(x)` columns (if `drop = FALSE`). In case of a vectorized distribution
+#'   object, a matrix with `length(x)` columns containing all possible combinations.
 #' @export
 #'
-cdf.NegativeBinomial <- function(d, x, ...) {
-  pnbinom(q = x, size = d$size, prob = d$p)
+cdf.NegativeBinomial <- function(d, x, drop = TRUE, ...) {
+  FUN <- if("mu" %in% names(unclass(d))) {
+    function(at, d) pnbinom(q = at, mu = d$mu, size = d$size, ...)
+  } else {
+    function(at, d) pnbinom(q = at, size = d$size, prob = d$p, ...)
+  }
+  apply_dpqr(d = d, FUN = FUN, at = x, type = "probability", drop = drop)
 }
 
 #' Determine quantiles of a NegativeBinomial distribution
@@ -163,31 +252,45 @@ cdf.NegativeBinomial <- function(d, x, ...) {
 #' @inheritParams random.NegativeBinomial
 #'
 #' @param probs A vector of probabilities.
-#' @param ... Unused. Unevaluated arguments will generate a warning to
-#'   catch mispellings or other possible errors.
+#' @param drop logical. Should the result be simplified to a vector if possible?
+#' @param ... Arguments to be passed to \code{\link[stats]{qnbinom}}.
+#'   Unevaluated arguments will generate a warning to catch mispellings or other
+#'   possible errors.
 #'
-#' @return A vector of quantiles, one for each element of `probs`.
+#' @return In case of a single distribution object, either a numeric
+#'   vector of length `probs` (if `drop = TRUE`, default) or a `matrix` with
+#'   `length(probs)` columns (if `drop = FALSE`). In case of a vectorized
+#'   distribution object, a matrix with `length(probs)` columns containing all
+#'   possible combinations.
 #' @export
 #'
 #' @family NegativeBinomial distribution
 #'
-quantile.NegativeBinomial <- function(x, probs, ...) {
+quantile.NegativeBinomial <- function(x, probs, drop = TRUE, ...) {
   ellipsis::check_dots_used()
-  qnbinom(p = probs, size = x$size, prob = x$p)
+  FUN <- if("mu" %in% names(unclass(x))) {
+    function(at, d) qnbinom(p = at, mu = x$mu, size = x$size, ...)
+  } else {
+    function(at, d) qnbinom(p = at, size = x$size, prob = x$p, ...)
+  }
+  apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop)
 }
 
 
 #' Return the support of the NegativeBinomial distribution
 #'
 #' @param d An `NegativeBinomial` object created by a call to [NegativeBinomial()].
+#' @param drop logical. Should the result be simplified to a vector if possible?
 #'
 #' @return A vector of length 2 with the minimum and maximum value of the support.
 #'
 #' @export
-support.NegativeBinomial <- function(d){
-  if(!is_distribution(d)){
-    message("d has to be a disitrubtion")
-    stop()
-  }
-  return(c(0, Inf))
+support.NegativeBinomial <- function(d, drop = TRUE) {
+  stopifnot("d must be a supported distribution object" = is_distribution(d))
+  stopifnot(is.logical(drop))
+
+  min <- rep(0, length(d))
+  max <- rep(Inf, length(d))
+
+  make_support(min, max, d, drop = drop)
 }

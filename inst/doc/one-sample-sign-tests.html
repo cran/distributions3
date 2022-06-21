@@ -14,7 +14,19 @@
 
 <title>One sample sign tests</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -24,6 +36,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -125,7 +138,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -143,8 +336,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="problem-setup" class="section level2">
 <h2>Problem setup</h2>
-<p>Sometimes you want to do a Z-test or a T-test, but for some reason these tests are not appropriate. Your data may be skewed, or from a distribution with outliers, or non-normal in some other important way. In these circumstances a sign test is appropriate.</p>
-<p>For example, suppose you wander around Times Square and ask strangers for their salaries. Incomes are typically very skewed, and you might get a sample like:</p>
+<p>Sometimes you want to do a Z-test or a T-test, but for some reason
+these tests are not appropriate. Your data may be skewed, or from a
+distribution with outliers, or non-normal in some other important way.
+In these circumstances a sign test is appropriate.</p>
+<p>For example, suppose you wander around Times Square and ask strangers
+for their salaries. Incomes are typically very skewed, and you might get
+a sample like:</p>
 <p><span class="math display">\[
   8478, 21564, 36562, 176602, 9395, 18320, 50000,
     2, 40298, 39, 10780, 2268583, 3404930
@@ -155,20 +353,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(incomes)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(incomes)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Luckily, the sign test only requires independent samples for valid inference (as a consequence, it has been low power).</p>
+<p>Luckily, the sign test only requires independent samples for valid
+inference (as a consequence, it has been low power).</p>
 </div>
 <div id="null-hypothesis-and-test-statistic" class="section level2">
 <h2>Null hypothesis and test statistic</h2>
-<p>The sign test allows us to test whether the median of a distribution equals some hypothesized value. Let’s test whether our data is consistent with median of 50,000, which is close-ish to the median income in the U.S. if memory serves. That is</p>
+<p>The sign test allows us to test whether the median of a distribution
+equals some hypothesized value. Let’s test whether our data is
+consistent with median of 50,000, which is close-ish to the median
+income in the U.S. if memory serves. That is</p>
 <p><span class="math display">\[
   H_0: m = 50,000 \qquad H_A: \mu \neq 50,000
 \]</span></p>
-<p>where <span class="math inline">\(m\)</span> stands for the population median. The test statistic is then</p>
+<p>where <span class="math inline">\(m\)</span> stands for the
+population median. The test statistic is then</p>
 <p><span class="math display">\[
-  B = \sum_{i=1}^n 1_{(50, 000, \infty)} (x_i) \sim \mathrm{Binomial}(N, 0.5)
+  B = \sum_{i=1}^n 1_{(50, 000, \infty)} (x_i) \sim \mathrm{Binomial}(N,
+0.5)
 \]</span></p>
-<p>Here <span class="math inline">\(B\)</span> is the number of data points observed that are strictly greater than the median, and <span class="math inline">\(N\)</span> is sample size <strong>after exact ties</strong> with the median have been removed. Forgetting to remove exact ties is a very frequent mistake when students do this test in classes I TA.</p>
-<p>If we sort the data we can see that <span class="math inline">\(B = 3\)</span> and <span class="math inline">\(N = 12\)</span> in our case:</p>
+<p>Here <span class="math inline">\(B\)</span> is the number of data
+points observed that are strictly greater than the median, and <span class="math inline">\(N\)</span> is sample size <strong>after exact
+ties</strong> with the median have been removed. Forgetting to remove
+exact ties is a very frequent mistake when students do this test in
+classes I TA.</p>
+<p>If we sort the data we can see that <span class="math inline">\(B =
+3\)</span> and <span class="math inline">\(N = 12\)</span> in our
+case:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(incomes)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]       2      39    8478    9395   10780   18320   21564   36562   40298</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10]   50000  176602 2268583 3404930</span></span></code></pre></div>
@@ -176,9 +386,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">sum</span>(incomes <span class="sc">&gt;</span> <span class="dv">50000</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>b</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(incomes <span class="sc">!=</span> <span class="dv">50000</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>n</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 12</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(incomes <span class="sc">!=</span> <span class="dv">50000</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>n</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 12</span></span></code></pre></div>
 </div>
 <div id="calculating-p-values" class="section level2">
 <h2>Calculating p-values</h2>
@@ -195,18 +406,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">Binomial</span>(n, <span class="fl">0.5</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">min</span>(<span class="fu">cdf</span>(X, b), <span class="dv">1</span> <span class="sc">-</span> <span class="fu">cdf</span>(X, b <span class="sc">-</span> <span class="dv">1</span>))</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1459961</span></span></code></pre></div>
-<p>In practice computing the c.d.f. of binomial random variables is rather tedious and there aren’t great shortcuts for small samples. If you got a question like this on an exam, you’d want to use the binomial p.m.f. repeatedly, like this:</p>
+<p>In practice computing the c.d.f. of binomial random variables is
+rather tedious and there aren’t great shortcuts for small samples. If
+you got a question like this on an exam, you’d want to use the binomial
+p.m.f. repeatedly, like this:</p>
 <p><span class="math display">\[
 \begin{align}
 P(B \le 3)
 &amp;= P(B = 0) + P(B = 1) + P(B = 2) + P(B = 3) \\
-&amp;= \binom{12}{0} 0.5^0 0.5^12 + 
+&amp;= \binom{12}{0} 0.5^0 0.5^12 +
   \binom{12}{1} 0.5^1 0.5^11 +
   \binom{12}{2} 0.5^2 0.5^10 +
   \binom{12}{3} 0.5^3 0.5^9
 \end{align}
 \]</span></p>
-<p>Finally, sometimes we are interest in one sided sign tests. For the test</p>
+<p>Finally, sometimes we are interest in one sided sign tests. For the
+test</p>
 <p><span class="math display">\[
 \begin{align}
   H_0: m \le 3 \qquad H_A: m &gt; 3
@@ -233,8 +448,11 @@ P(B \le 3)
 </div>
 <div id="using-the-binom.test-function" class="section level2">
 <h2>Using the binom.test() function</h2>
-<p>To verify results we can use the <code>binom.test()</code> from base R. The <code>x</code> argument gets the value of <span class="math inline">\(B\)</span>, <code>n</code> the value of <span class="math inline">\(N\)</span>, and <code>p = 0.5</code> for a test of the median.</p>
-<p>That is, for <span class="math inline">\(H_0 : m = 3\)</span> we would use</p>
+<p>To verify results we can use the <code>binom.test()</code> from base
+R. The <code>x</code> argument gets the value of <span class="math inline">\(B\)</span>, <code>n</code> the value of <span class="math inline">\(N\)</span>, and <code>p = 0.5</code> for a test of
+the median.</p>
+<p>That is, for <span class="math inline">\(H_0 : m = 3\)</span> we
+would use</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="dv">3</span>, <span class="at">n =</span> <span class="dv">12</span>, <span class="at">p =</span> <span class="fl">0.5</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Exact binomial test</span></span>
@@ -273,7 +491,8 @@ P(B \le 3)
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sample estimates:</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; probability of success </span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   0.25</span></span></code></pre></div>
-<p>All of these results agree with our manual computations, which is reassuring.</p>
+<p>All of these results agree with our manual computations, which is
+reassuring.</p>
 </div>
 
 

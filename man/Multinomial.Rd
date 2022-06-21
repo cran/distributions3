@@ -75,7 +75,6 @@ random(X, 10)
 
 # pdf(X, 2)
 # log_pdf(X, 2)
-
 }
 \seealso{
 Other discrete distributions: 
@@ -83,9 +82,11 @@ Other discrete distributions:
 \code{\link{Binomial}()},
 \code{\link{Categorical}()},
 \code{\link{Geometric}()},
+\code{\link{HurdlePoisson}()},
 \code{\link{HyperGeometric}()},
 \code{\link{NegativeBinomial}()},
-\code{\link{Poisson}()}
+\code{\link{Poisson}()},
+\code{\link{ZIPoisson}()}
 }
 \concept{discrete distributions}
 \concept{multivariate distributions}

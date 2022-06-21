@@ -73,7 +73,6 @@ quantile(X, 0.7)
 
 cdf(X, quantile(X, 0.7))
 quantile(X, cdf(X, 7))
-
 }
 \seealso{
 Other discrete distributions: 
@@ -81,8 +80,10 @@ Other discrete distributions:
 \code{\link{Binomial}()},
 \code{\link{Categorical}()},
 \code{\link{Geometric}()},
+\code{\link{HurdlePoisson}()},
 \code{\link{HyperGeometric}()},
 \code{\link{Multinomial}()},
-\code{\link{NegativeBinomial}()}
+\code{\link{NegativeBinomial}()},
+\code{\link{ZIPoisson}()}
 }
 \concept{discrete distributions}
