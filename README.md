@@ -51,12 +51,12 @@ devtools::install_github("alexpghayes/distributions3")
 The basic usage of `distributions3` looks like:
 
 ``` r
-library(distributions3)
+library("distributions3")
 
 X <- Bernoulli(0.1)
 
 random(X, 10)
-#>  [1] 0 0 0 0 0 1 0 0 0 0
+#>  [1] 0 0 0 0 0 0 0 0 0 0
 pdf(X, 1)
 #> [1] 0.1
 
@@ -73,11 +73,8 @@ the plot.
 
 ## Contributing
 
-`distributions3` is not under active development, but is fairly stable
-and used by several academics for teaching intro stat courses. We are
-happy to review PRs contributing bug fixes. If you are interested in
-more actively maintaining and developing `distributions3`, please reach
-out on Github!
+If you are interested in contributing to `distributions3`, please reach
+out on Github! We are happy to review PRs contributing bug fixes.
 
 Please note that `distributions3` is released with a [Contributor Code
 of
