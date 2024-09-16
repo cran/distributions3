@@ -1,7 +1,5 @@
-context("test-Gamma")
-
 test_that("print.Gamma works", {
-  expect_output(print(Gamma(1, 1)), regexp = "Gamma distribution")
+  expect_output(print(Gamma(1, 1)), regexp = "Gamma")
 })
 
 test_that("likelihood.Gamma and log_likelihood.Gamma work correctly", {
@@ -23,7 +21,7 @@ test_that("random.Gamma work correctly", {
   expect_length(random(cau[-1], 1), 0)
   expect_length(random(cau, 0), 0)
   expect_error(random(cau, -2))
- 
+
   # consistent with base R, using the `length` as number of samples to draw
   expect_length(random(cau, c(1, 2, 3)), 3)
   expect_length(random(cau, cbind(1, 2, 3)), 3)

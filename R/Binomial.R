@@ -103,7 +103,7 @@ Binomial <- function(size, p = 0.5) {
 
 #' @export
 mean.Binomial <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   rval <- x$size * x$p
   setNames(rval, names(x))
 }
@@ -153,7 +153,7 @@ random.Binomial <- function(x, n = 1L, drop = TRUE, ...) {
   if (n == 0L) {
     return(numeric(0L))
   }
-  FUN <- function(at, d) rbinom(n = at, size = x$size, prob = x$p)
+  FUN <- function(at, d) rbinom(n = at, size = d$size, prob = d$p)
   apply_dpqr(d = x, FUN = FUN, at = n, type = "random", drop = drop)
 }
 
@@ -249,7 +249,7 @@ cdf.Binomial <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #' @export
 #'
 quantile.Binomial <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
-  FUN <- function(at, d) qbinom(at, size = x$size, prob = x$p, ...)
+  FUN <- function(at, d) qbinom(at, size = d$size, prob = d$p, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
 
@@ -300,7 +300,7 @@ suff_stat.Binomial <- function(d, x, ...) {
 #'
 #' @export
 support.Binomial <- function(d, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- d$size
   make_support(min, max, d, drop = drop)
@@ -308,12 +308,12 @@ support.Binomial <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Binomial <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Binomial <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }

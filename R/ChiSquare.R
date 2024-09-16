@@ -101,7 +101,7 @@ ChiSquare <- function(df) {
 
 #' @export
 mean.ChiSquare <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   rval <- x$df
   setNames(rval, names(x))
 }
@@ -145,7 +145,7 @@ random.ChiSquare <- function(x, n = 1L, drop = TRUE, ...) {
   if (n == 0L) {
     return(numeric(0L))
   }
-  FUN <- function(at, d) rchisq(n = at, df = x$df)
+  FUN <- function(at, d) rchisq(n = at, df = d$df)
   apply_dpqr(d = x, FUN = FUN, at = n, type = "random", drop = drop)
 }
 
@@ -244,7 +244,7 @@ cdf.ChiSquare <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 quantile.ChiSquare <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
   # TODO: in the documentation, more information on return and
   # how quantiles are calculated
-  FUN <- function(at, d) qchisq(at, df = x$df, ...)
+  FUN <- function(at, d) qchisq(at, df = d$df, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
 
@@ -259,7 +259,7 @@ quantile.ChiSquare <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
 #'
 #' @export
 support.ChiSquare <- function(d, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- rep(Inf, length(d))
   make_support(min, max, d, drop = drop)
@@ -267,12 +267,12 @@ support.ChiSquare <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.ChiSquare <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.ChiSquare <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }

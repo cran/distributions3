@@ -130,7 +130,7 @@ cdf.Tukey <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #' @family Tukey distribution
 #'
 quantile.Tukey <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
-  FUN <- function(at, d) qtukey(p = at, nmeans = x$nmeans, df = x$df, nranges = x$nranges, ...)
+  FUN <- function(at, d) qtukey(p = at, nmeans = d$nmeans, df = d$df, nranges = d$nranges, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
 
@@ -145,7 +145,7 @@ quantile.Tukey <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
 #'
 #' @export
 support.Tukey <- function(d, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- rep(Inf, length(d))
   make_support(min, max, d, drop = drop)
@@ -153,12 +153,12 @@ support.Tukey <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Tukey <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Tukey <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }

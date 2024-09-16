@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##",
@@ -19,7 +19,7 @@ quantile(Y, c(0.1, 0.5, 0.9))
 set.seed(0)
 random(Y, 5)
 
-## ---- echo=-1, fig.height=8, fig.width=12, out.width="100%"-------------------
+## ----echo=-1, fig.height=8, fig.width=12, out.width="100%"--------------------
 par(mfrow = c(2, 2))
 plot(Poisson(0.5), main = expression(lambda == 0.5), xlim = c(0, 15))
 plot(Poisson(2),   main = expression(lambda == 2),   xlim = c(0, 15))
@@ -86,7 +86,7 @@ head(expected)
 expected <- colMeans(expected)
 cbind(observed, expected)
 
-## ---- echo=-1, fig.height=4.5, fig.width=5, out.width="60%"-------------------
+## ----echo=-1, fig.height=4.5, fig.width=5, out.width="60%"--------------------
 par(mar = c(4, 4, 1, 1))
 bp <- barplot(sqrt(observed), offset = sqrt(expected) - sqrt(observed),
   xlab = "Goals", ylab = "sqrt(Frequency)")

@@ -68,7 +68,7 @@ Weibull <- function(shape, scale) {
 
 #' @export
 mean.Weibull <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   rval <- x$scale * gamma(1 + 1 / x$shape)
   setNames(rval, names(x))
 }
@@ -224,7 +224,7 @@ cdf.Weibull <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #' @family Weibull distribution
 #'
 quantile.Weibull <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
-  FUN <- function(at, d) qweibull(p = at, shape = x$shape, scale = x$scale, ...)
+  FUN <- function(at, d) qweibull(p = at, shape = d$shape, scale = d$scale, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
 
@@ -239,7 +239,7 @@ quantile.Weibull <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
 #'
 #' @export
 support.Weibull <- function(d, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- rep(Inf, length(d))
   make_support(min, max, d, drop = drop)
@@ -247,12 +247,12 @@ support.Weibull <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Weibull <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Weibull <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }

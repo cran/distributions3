@@ -52,9 +52,9 @@ distribution.
 \strong{Cumulative distribution function (c.d.f.)}: \eqn{P(X \le 0) = 1 - \pi} and for \eqn{k > 0}
 
 \deqn{
-    P(X = k) = 1 - \pi + \pi \cdot \frac{F(k; \lambda)}{1 - F(0; \lambda)}
+    P(X \le k) = 1 - \pi + \pi \cdot \frac{F(k; \lambda) - F(0; \lambda)}{1 - F(0; \lambda)}
   }{
-    P(X = k) = 1 - \pi + \pi \cdot F(k; \lambda)/(1 - F(0; \lambda))
+    P(X \le k) = 1 - \pi + \pi \cdot (F(k; \lambda) - F(0; \lambda))/(1 - F(0; \lambda))
   }
 
 where \eqn{F(k; \lambda)} is the c.d.f. of the \code{\link{Poisson}} distribution.
@@ -95,6 +95,7 @@ Other discrete distributions:
 \code{\link{Multinomial}()},
 \code{\link{NegativeBinomial}()},
 \code{\link{Poisson}()},
+\code{\link{PoissonBinomial}()},
 \code{\link{ZINegativeBinomial}()},
 \code{\link{ZIPoisson}()},
 \code{\link{ZTNegativeBinomial}()},

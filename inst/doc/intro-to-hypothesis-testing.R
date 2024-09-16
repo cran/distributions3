@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -7,10 +7,10 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 got_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE)
 
-## ---- eval = got_ggplot2------------------------------------------------------
+## ----eval = got_ggplot2-------------------------------------------------------
 library(ggplot2)
 library(distributions3)
 

@@ -94,7 +94,7 @@ Bernoulli <- function(p = 0.5) {
 
 #' @export
 mean.Bernoulli <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(x$p, names(x))
 }
 
@@ -140,7 +140,7 @@ random.Bernoulli <- function(x, n = 1L, drop = TRUE, ...) {
   if (n == 0L) {
     return(numeric(0L))
   }
-  FUN <- function(at, d) rbinom(n = at, size = 1, prob = x$p)
+  FUN <- function(at, d) rbinom(n = at, size = 1, prob = d$p)
   apply_dpqr(d = x, FUN = FUN, at = n, type = "random", drop = drop)
 }
 
@@ -237,7 +237,7 @@ cdf.Bernoulli <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #' @export
 #'
 quantile.Bernoulli <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
-  FUN <- function(at, d) qbinom(at, size = 1, prob = x$p, ...)
+  FUN <- function(at, d) qbinom(at, size = 1, prob = d$p, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
 
@@ -281,7 +281,7 @@ suff_stat.Bernoulli <- function(d, x, ...) {
 #'
 #' @export
 support.Bernoulli <- function(d, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- rep(1, length(d))
   make_support(min, max, d, drop = drop)
@@ -289,12 +289,12 @@ support.Bernoulli <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Bernoulli <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Bernoulli <- function(d, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }

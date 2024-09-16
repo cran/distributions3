@@ -1,7 +1,5 @@
-context("test-LogNormal")
-
 test_that("print.LogNormal works", {
-  expect_output(print(LogNormal()), regexp = "LogNormal distribution")
+  expect_output(print(LogNormal()), regexp = "LogNormal")
 })
 
 test_that("likelihood.LogNormal and log_likelihood.LogNormal work correctly", {
@@ -23,7 +21,7 @@ test_that("random.LogNormal work correctly", {
   expect_length(random(cau[-1], 1), 0)
   expect_length(random(cau, 0), 0)
   expect_error(random(cau, -2))
- 
+
   # consistent with base R, using the `length` as number of samples to draw
   expect_length(random(cau, c(1, 2, 3)), 3)
   expect_length(random(cau, cbind(1, 2, 3)), 3)

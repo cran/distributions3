@@ -83,7 +83,7 @@ is_distribution <- function(x) {
 #' ## mean(), variance(), skewness(), kurtosis().
 #' ## These can be typically be defined as functions of the list of parameters.
 #' mean.Gaussian <- function(x, ...) {
-#'   ellipsis::check_dots_used()
+#'   rlang::check_dots_used()
 #'   setNames(x$mu, names(x))
 #' }
 #' ## Analogously for other moments, see distributions3:::variance.Normal etc.
@@ -285,8 +285,21 @@ format.distribution <- function(x, digits = pmax(3L, getOption("digits") - 3L), 
   n <- names(x)
   if (is.null(attr(x, "row.names"))) attr(x, "row.names") <- 1L:length(x)
   class(x) <- "data.frame"
-  f <- sprintf("%s distribution (%s)", cl, apply(rbind(apply(as.matrix(x), 2L, format, digits = digits, ...)), 1L, function(p) paste(names(x), "=", as.vector(p), collapse = ", ")))
+  f <- sprintf("%s(%s)", cl, apply(rbind(apply(as.matrix(x), 2L, format, digits = digits, ...)), 1L, function(p) paste(names(x), "=", as.vector(p), collapse = ", ")))
   setNames(f, n)
+}
+
+#' @export
+as.character.distribution <- function(x, digits = 15L, drop0trailing = TRUE, ...) {
+  y <- format(x, digits = digits, drop0trailing = drop0trailing, ...)
+  if (!is.null(names(y))) names(y) <- NULL
+  return(y)
+}
+
+#' @export
+duplicated.distribution <- function(x, incomparables = FALSE, ...) {
+  class(x) <- "data.frame"
+  duplicated(x, incomparables = incomparables, ...)
 }
 
 #' @export

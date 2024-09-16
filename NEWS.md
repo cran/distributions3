@@ -1,3 +1,42 @@
+# distributions3 0.2.2
+
+- New `PoissonBinomial()` distribution, a generalization of the binomial distribution. The Poisson
+  binomial is characterized by n independent Bernoulli trials but with potentially different
+  success probabilities. The `d`/`p`/`q`/`r` functions employ the efficient implementation from
+  the [PoissonBinomial](https://CRAN.R-project.org/package=PoissonBinomial) package, if available.
+  In case it is not available, fallback computation based on a normal approximation are provided
+  - with a warning, by default (#100).
+- The `prodist()` methods for various count regression objects now distinguish between computations
+  for the classic [pscl](https://CRAN.R-project.org/package=pscl) package and the newer
+  [countreg](https://R-Forge.R-project.org/projects/countreg/) package (currently on R-Forge, soon
+  to be released to CRAN).
+- The `simulate()` method for `distribution` objects is now better aligned with `simulate.lm()`
+  in base R: It now always returns a `data.frame` with `seed` attribute.
+- New `simulate()` default method which leverages `prodist()` and subsequently uses the
+  `simulate()` method for `distribution` objects.
+- New `prodist()` methods for `distribution` objects which just returns the unmodified
+  `distribution` object itself.
+- The `format()` method - and hence the `print()` method - for `distribution` objects has been
+  simplified. For example, now `Normal(mu = 0, sigma = 1)` is used instead of
+  `Normal distribution (mu = 0, sigma = 1)` in order to yield a more compact output, especially
+  for vectors of distributions (#101).
+- Added an `as.character()` method which essentially calls `format(..., digits = 15, drop0trailing = TRUE)`.
+  This mimics the behavior and precision of base R for real vectors. Note that this enables
+  using `match()` for distribution objects.
+- Added a `duplicated()` method which relies on the corresponding method for the `data.frame`
+  of parameters in a distribution.
+- Enabled the inclusion of `distribution` vectors as columns in `tibble` data objects, see
+  `?vec_proxy.distribution` for further details and a practical example.
+- Fixed errors in notation of cumulative distribution function in the documentation of
+  `HurdlePoisson()` and `HurdleNegativeBinomial()` (by @dkwhu in #94 and #96).
+- The `prodist()` method for `glm` objects can now also handle `family` specifications from
+  `MASS::negative.binomial(theta)` with fixed `theta` (reported by Christian Kleiber).
+- Replace `ellipsis` dependency by `rlang` as the former will be
+  [deprecated/archived](https://rlang.r-lib.org/news/index.html#argument-intake-1-0-0)
+  (by @olivroy in #105).
+- Further small improvements in methods and manual pages.
+
+
 # distributions3 0.2.1
 
 - New generics `is_discrete()` and `is_continous()` with methods for all distribution objects

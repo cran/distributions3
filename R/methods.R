@@ -1,5 +1,5 @@
 # things to sort out with the generics
-#  - can i get stats::generics() to use ellipsis::check_dots_used()?
+#  - can i get stats::generics() to use rlang::check_dots_used()?
 #  - pdf() conflict with grDevices::pdf()
 
 #' Draw a random sample from a probability distribution
@@ -28,7 +28,10 @@
 #'   prior to drawing the random sample. The previous random seed from the global
 #'   environment (if any) is restored afterwards.
 #'
-#' @return Random samples drawn from the distriubtion `x`.
+#' @return Random samples drawn from the distriubtion `x`. The \code{random}
+#' methods typically return either a matrix or, if possible, a vector. The
+#' \code{simulate} method always returns a data frame (with an attribute
+#' \code{"seed"} containing the \code{.Random.seed} from before the simulation).
 #'
 #' @examples
 #' ## distribution object
@@ -37,7 +40,7 @@
 #' random(X, 10)
 #' @export
 random <- function(x, n = 1L, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("random")
 }
 
@@ -46,14 +49,20 @@ random <- function(x, n = 1L, drop = TRUE, ...) {
 #' @export
 simulate.distribution <- function(object, nsim = 1L, seed = NULL, ...) {
   ## set seed if provided but restore previous original seed afterwards
-  if (!is.null(seed)) {
-    if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-      oseed <- get(".Random.seed", envir = .GlobalEnv)
-      on.exit(assign(".Random.seed", oseed, envir = .GlobalEnv))
-    }
+  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) runif(1)
+  if (is.null(seed)){
+    RNGstate <- get(".Random.seed", envir = .GlobalEnv)
+  } else {
+    R.seed <- get(".Random.seed", envir = .GlobalEnv)
     set.seed(seed)
+    RNGstate <- structure(seed, kind = as.list(RNGkind()))
+    on.exit(assign(".Random.seed", R.seed, envir = .GlobalEnv))
   }
-  random(x = object, n = nsim, ...)
+
+  val <- as.data.frame(random(object, n = nsim, drop = FALSE, ...))
+  rownames(val) <- names(object)
+  attr(val, "seed") <- RNGstate
+  return(val)
 }
 
 #' Evaluate the probability density of a probability distribution
@@ -89,14 +98,14 @@ simulate.distribution <- function(object, nsim = 1L, seed = NULL, ...) {
 #' log_pdf(X, c(1, 2, 3, 4, 5))
 #' @export
 pdf <- function(d, x, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("pdf")
 }
 
 #' @rdname pdf
 #' @export
 log_pdf <- function(d, x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("log_pdf")
 }
 
@@ -128,7 +137,7 @@ pmf <- function(d, x, ...) {
 #' cdf(X, c(1, 2, 3, 4, 5))
 #' @export
 cdf <- function(d, x, drop = TRUE, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("cdf")
 }
 
@@ -157,21 +166,21 @@ cdf <- function(d, x, drop = TRUE, ...) {
 #' @export
 #'
 variance <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("variance")
 }
 
 #' @rdname variance
 #' @export
 skewness <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("skewness")
 }
 
 #' @rdname variance
 #' @export
 kurtosis <- function(x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("kurtosis")
 }
 
@@ -223,7 +232,7 @@ likelihood <- function(d, x, ...) {
 #' fit_mle(X, c(-1, 0, 0, 0, 3))
 #' @export
 fit_mle <- function(d, x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("fit_mle")
 }
 
@@ -241,7 +250,7 @@ fit_mle <- function(d, x, ...) {
 #' suff_stat(X, c(-1, 0, 0, 0, 3))
 #' @export
 suff_stat <- function(d, x, ...) {
-  ellipsis::check_dots_used()
+  rlang::check_dots_used()
   UseMethod("suff_stat")
 }
 

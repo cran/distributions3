@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -17,10 +17,10 @@ qqline(biology)
 qqnorm(english)
 qqline(english)
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 got_ggplot2 <- requireNamespace("ggplot2", quietly = TRUE)
 
-## ---- eval = got_ggplot2------------------------------------------------------
+## ----eval = got_ggplot2-------------------------------------------------------
 library(ggplot2)
 
 # make a data frame in long format for plotting
