@@ -25,7 +25,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3/>, where the math
+#'   <https://zeileis.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a GEV random variable with location
@@ -149,7 +149,7 @@ variance.GEV <- function(x, ...) {
 
 #' @export
 skewness.GEV <- function(x, ...) {
-  rval <- ifelse(x$xi == 1,
+  rval <- ifelse(x$xi == 0,
     # no useful zeta fn without adding a dependency
     {
       zeta3 <- 1.202056903159594014596

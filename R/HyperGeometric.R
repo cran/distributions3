@@ -24,7 +24,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3/>, where the math
+#'   <https://zeileis.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a HyperGeometric random variable with
@@ -148,7 +148,9 @@ kurtosis.HyperGeometric <- function(x, ...) {
   K <- x$m
   n <- x$k
 
-  rval <- 1 / (n * K * (N - K) * (N - n) * (N - 2) * (N - 3))
+  rval <- 1 / (n * K * (N - K) * (N - n) * (N - 2) * (N - 3)) *
+    ( (N - 1) * N^2 * (N * (N + 1) - 6 * K * (N - K) - 6 * n * (N - n)) +
+      6 * n * K * (N - K) * (N - n) * (5 * N - 6) )
   setNames(rval, names(x))
 }
 

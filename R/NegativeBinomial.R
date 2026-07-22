@@ -20,7 +20,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3/>, where the math
+#'   <https://zeileis.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a negative binomial random variable with
@@ -142,7 +142,7 @@ skewness.NegativeBinomial <- function(x, ...) {
 kurtosis.NegativeBinomial <- function(x, ...) {
   rlang::check_dots_used()
   if("mu" %in% names(unclass(x))) x$p <- x$size/(x$size + x$mu)
-  rval <- 6 / x$size + x$p^2 / x$size * (1 - x$p)
+  rval <- 6/x$size + x$p^2 / (x$size * (1 - x$p))
   setNames(rval, names(x))
 }
 

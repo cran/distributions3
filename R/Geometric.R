@@ -17,7 +17,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3/>, where the math
+#'   <https://zeileis.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be a Geometric random variable with
@@ -73,7 +73,7 @@ Geometric <- function(p = 0.5) {
 #' @export
 mean.Geometric <- function(x, ...) {
   rlang::check_dots_used()
-  rval <- 1 / x$p
+  rval <- (1 - x$p) / x$p
   setNames(rval, names(x))
 }
 #' @export

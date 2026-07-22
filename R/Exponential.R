@@ -18,7 +18,7 @@
 #' @details
 #'
 #'   We recommend reading this documentation on
-#'   <https://alexpghayes.github.io/distributions3/>, where the math
+#'   <https://zeileis.github.io/distributions3/>, where the math
 #'   will render with additional detail and much greater clarity.
 #'
 #'   In the following, let \eqn{X} be an Exponential random variable with
@@ -85,7 +85,7 @@ mean.Exponential <- function(x, ...) {
 
 #' @export
 variance.Exponential <- function(x, ...) {
-  rval <- x$rate^2
+  rval <- x$rate^-2
   setNames(rval, names(x))
 }
 
