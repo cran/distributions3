@@ -1,3 +1,9 @@
+
+test_that("Exponential default arguments", {
+  expect_identical(formals(Exponential),
+    as.pairlist(alist(rate = 1)))
+})
+
 test_that("fit_mle.Exponential works correctly", {
   expect_equal(fit_mle(Exponential(), 1), Exponential(1))
 
@@ -170,4 +176,13 @@ test_that("named return values for Exponential distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for Exponential returns correct object", {
+  d <- Exponential(c(2, 10))
+  expect_silent(crps <- crps(d, 5))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
 })

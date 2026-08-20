@@ -1,3 +1,9 @@
+
+test_that("Gumbel default arguments", {
+  expect_identical(formals(Gumbel),
+    as.pairlist(alist(mu = 0, sigma = 1)))
+})
+
 test_that("print.Gumbel works", {
   expect_output(print(Gumbel()), regexp = "Gumbel")
 })
@@ -152,4 +158,13 @@ test_that("named return values for Gumbel distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for Gumbel returns correct object", {
+  d <- Gumbel(0, c(0.5, 1))
+  suppressWarnings(crps <- crps(d, 3))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
 })

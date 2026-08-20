@@ -4,7 +4,7 @@
 \alias{ChiSquare}
 \title{Create a Chi-Square distribution}
 \usage{
-ChiSquare(df)
+ChiSquare(df = numeric())
 }
 \arguments{
 \item{df}{Degrees of freedom. Must be positive.}
@@ -117,6 +117,7 @@ Other continuous distributions:
 \code{\link[=Logistic]{Logistic()}},
 \code{\link[=Normal]{Normal()}},
 \code{\link[=RevWeibull]{RevWeibull()}},
+\code{\link[=SinhArcsinh]{SinhArcsinh()}},
 \code{\link[=StudentsT]{StudentsT()}},
 \code{\link[=Tukey]{Tukey()}},
 \code{\link[=Uniform]{Uniform()}},

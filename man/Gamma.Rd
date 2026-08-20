@@ -4,7 +4,7 @@
 \alias{Gamma}
 \title{Create a Gamma distribution}
 \usage{
-Gamma(shape, rate = 1)
+Gamma(shape = numeric(), rate = 1)
 }
 \arguments{
 \item{shape}{The shape parameter. Can be any positive number.}
@@ -102,6 +102,7 @@ Other continuous distributions:
 \code{\link[=Logistic]{Logistic()}},
 \code{\link[=Normal]{Normal()}},
 \code{\link[=RevWeibull]{RevWeibull()}},
+\code{\link[=SinhArcsinh]{SinhArcsinh()}},
 \code{\link[=StudentsT]{StudentsT()}},
 \code{\link[=Tukey]{Tukey()}},
 \code{\link[=Uniform]{Uniform()}},

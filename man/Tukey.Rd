@@ -4,7 +4,7 @@
 \alias{Tukey}
 \title{Create a Tukey distribution}
 \usage{
-Tukey(nmeans, df, nranges)
+Tukey(nmeans = numeric(), df = numeric(), nranges = numeric())
 }
 \arguments{
 \item{nmeans}{Sample size for each range.}
@@ -58,6 +58,7 @@ Other continuous distributions:
 \code{\link[=Logistic]{Logistic()}},
 \code{\link[=Normal]{Normal()}},
 \code{\link[=RevWeibull]{RevWeibull()}},
+\code{\link[=SinhArcsinh]{SinhArcsinh()}},
 \code{\link[=StudentsT]{StudentsT()}},
 \code{\link[=Uniform]{Uniform()}},
 \code{\link[=Weibull]{Weibull()}}

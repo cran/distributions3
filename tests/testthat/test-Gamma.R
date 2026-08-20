@@ -1,3 +1,9 @@
+
+test_that("Gamma default arguments", {
+  expect_identical(formals(Gamma),
+    as.pairlist(alist(shape = numeric(), rate = 1)))
+})
+
 test_that("print.Gamma works", {
   expect_output(print(Gamma(1, 1)), regexp = "Gamma")
 })
@@ -162,4 +168,13 @@ test_that("named return values for Gamma distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for Gamma returns correct object", {
+  d <- Gamma(c(2, 10), c(5, 5))
+  expect_silent(crps <- crps(d, 5))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
 })

@@ -4,7 +4,7 @@
 \alias{StudentsT}
 \title{Create a Student's T distribution}
 \usage{
-StudentsT(df)
+StudentsT(df = numeric())
 }
 \arguments{
 \item{df}{Degrees of freedom. Can be any positive number. Often
@@ -135,6 +135,7 @@ Other continuous distributions:
 \code{\link[=Logistic]{Logistic()}},
 \code{\link[=Normal]{Normal()}},
 \code{\link[=RevWeibull]{RevWeibull()}},
+\code{\link[=SinhArcsinh]{SinhArcsinh()}},
 \code{\link[=Tukey]{Tukey()}},
 \code{\link[=Uniform]{Uniform()}},
 \code{\link[=Weibull]{Weibull()}}

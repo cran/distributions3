@@ -1,3 +1,57 @@
+# distributions3 0.3.0
+
+- New `Empirical()` distribution based on a random `sample`. This is particularly
+  useful when forecasts are represented by samples rather than by parametric
+  distributions (#98 and #120 by Reto Stauffer).
+
+- New `SinhArcsinh()` distribution implementing the Sinh-Arcsinh distribution
+  from [Jones and Pewsey (2009, Biometrika)](https://doi.org/10.1093/biomet/asp053)
+  (#128 by Reto Stauffer).
+
+- Fallback methods for all standard `distributions3` methods such as `cdf()`,
+  `pdf()`, `quantile()`, `random()`, and moments such as `mean()`, `variance()`,
+  `skewness()`, and `kurtosis()`. These leverage those methods that are available
+  but fill the gaps using numerical integration/differentiation (#120 by Reto
+  Stauffer).
+
+- New generic functions `score()` and `hessian()` to compute the score (first
+  derivative of the log-likelihood with respect to the parameters) and Hessian
+  (corresponding second derivative). There are numeric fallback methods for
+  general distribution objects and analytic methods for a few distributions.
+  The `hessian()` methods should typically have an argument `expected` which
+  allows to select whether the observed (`expected = FALSE`) or expected
+  (`expected = TRUE`) Hessian should be computed. Some methods may only support
+  one or the other specification and throw an error message otherwise
+  (#124 and #128 by Reto Stauffer and Achim Zeileis).
+
+- All distribution constructor functions such as `Poisson()` and `Binomial()` now
+  have default arguments for all distribution parameters. Typically, these new
+  defaults are empty so that for example `Poisson()` yields a Poisson distribution
+  of length zero. Only those distributions which already previously had a default
+  such as `Normal(mu = 0, sigma = 1)` yield a distribution of length one (#26
+  and #129 by Reto Stauffer).
+
+- Methods for `crps()` function from the
+  [scoringRules](https://CRAN.R-project.org/package=scoringRules) package for
+  computing the (continuous) ranked probabiity score of a distribution. This is
+  a useful proper scoring rule as an alternative to the log-likelihood. A numerical
+  fallback method is provided as well (#88 and #120 by Reto Stauffer and Achim Zeileis).
+
+- Streamline the `apply_dpqr()` workhorse function to avoid unnecessary computations
+  more carefully (#123 and #125 by Achim Zeileis).
+
+- Reduce the hard dependencies: `ggplot2` is now a "Suggests" dependency and the
+  usage of `glue` is replaced by base R function `sprintf()` (#126 and #125 by
+  Achim Zeileis).
+
+- Avoid using `rlang::check_dots_used()` multiple times when calling a single method.
+  For generic functions from `distributions3`, such as `cdf()` and `variance()` etc.,
+  the call to `rlang::check_dots_used()` is directly in the generic. For generic
+  functions defined elsewhere, namely `quantile()` and `mean()` from base R and
+  `crps()` from `scoringRules`, all methods call `rlang::check_dots_used()` themselves
+  (#127 by Reto Stauffer).
+
+
 # distributions3 0.2.4
 
 - Achim Zeileis (@zeileis) takes over maintenance from Alex Hayes (@alexpghayes).
@@ -22,7 +76,7 @@
   a warning, by default (#100).
 - The `prodist()` methods for various count regression objects now distinguish between computations
   for the classic [pscl](https://CRAN.R-project.org/package=pscl) package and the newer
-  [countreg](https://R-Forge.R-project.org/projects/countreg/) package (currently on R-Forge, soon
+  [countreg](https://codeberg.org/zeileis/countreg/) package (currently on Codeberg, soon
   to be released to CRAN).
 - The `simulate()` method for `distribution` objects is now better aligned with `simulate.lm()`
   in base R: It now always returns a `data.frame` with `seed` attribute.

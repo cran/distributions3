@@ -4,7 +4,7 @@
 \alias{FisherF}
 \title{Create an F distribution}
 \usage{
-FisherF(df1, df2, lambda = 0)
+FisherF(df1 = numeric(), df2 = numeric(), lambda = 0)
 }
 \arguments{
 \item{df1}{Numerator degrees of freedom. Can be any positive number.}
@@ -61,6 +61,7 @@ Other continuous distributions:
 \code{\link[=Logistic]{Logistic()}},
 \code{\link[=Normal]{Normal()}},
 \code{\link[=RevWeibull]{RevWeibull()}},
+\code{\link[=SinhArcsinh]{SinhArcsinh()}},
 \code{\link[=StudentsT]{StudentsT()}},
 \code{\link[=Tukey]{Tukey()}},
 \code{\link[=Uniform]{Uniform()}},

@@ -92,9 +92,11 @@ Bernoulli <- function(p = 0.5) {
   d
 }
 
+#' @importFrom rlang check_dots_used
 #' @export
 mean.Bernoulli <- function(x, ...) {
-  rlang::check_dots_used()
+  check_dots_used()
+  if (!length(x)) return(numeric())
   setNames(x$p, names(x))
 }
 
@@ -234,9 +236,12 @@ cdf.Bernoulli <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #'   `length(probs)` columns (if `drop = FALSE`). In case of a vectorized
 #'   distribution object, a matrix with `length(probs)` columns containing all
 #'   possible combinations.
-#' @export
 #'
+#' @importFrom rlang check_dots_used
+#' @export
 quantile.Bernoulli <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
+  check_dots_used()
+  if (!length(x)) return(numeric())
   FUN <- function(at, d) qbinom(at, size = 1, prob = d$p, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
@@ -281,7 +286,6 @@ suff_stat.Bernoulli <- function(d, x, ...) {
 #'
 #' @export
 support.Bernoulli <- function(d, drop = TRUE, ...) {
-  rlang::check_dots_used()
   min <- rep(0, length(d))
   max <- rep(1, length(d))
   make_support(min, max, d, drop = drop)
@@ -289,12 +293,51 @@ support.Bernoulli <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Bernoulli <- function(d, ...) {
-  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Bernoulli <- function(d, ...) {
-  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
+}
+
+
+# ---------------------------------------------------------------------------
+# Bernoulli: methods for score/hessian (documented on ?score-hessian for now)
+# ---------------------------------------------------------------------------
+
+#' @rdname score-hessian
+#' @name score-hessian
+#' @usage NULL
+#' @exportS3Method
+score.Bernoulli <- function(d, x, which = "p", drop = TRUE, ...) {
+  ## sanity check
+  n <- c(length(d), length(x))
+  if (n[1L] != n[2L] && all(n > 1L)) stop("'d' and 'x' must have length 1 or the same length")
+
+  ## only one parameter
+  which <- match.arg(which, "p", several.ok = TRUE)
+
+  ## compute score
+  s <- (x - d$p)/(d$p * (1 - d$p))
+  if (!drop) s <- cbind("p" = s)
+  return(s)
+}
+
+#' @rdname score-hessian
+#' @usage NULL
+#' @exportS3Method
+hessian.Bernoulli <- function(d, x, which = "p", drop = TRUE, expected = FALSE, ...) {
+  ## sanity check
+  n <- c(length(d), length(x))
+  if (n[1L] != n[2L] && all(n > 1L)) stop("'d' and 'x' must have length 1 or the same length")
+  n <- max(n)
+
+  ## only one parameter
+  which <- match.arg(which, "p", several.ok = TRUE)
+
+  ## compute hessian
+  h <- if (expected) 0 * x - 1/(d$p * (1 - d$p)) else -x/d$p^2 - (1 - x)/(1 - d$p)^2
+  if (!drop) h <- cbind("p" = h)
+  return(h)
 }

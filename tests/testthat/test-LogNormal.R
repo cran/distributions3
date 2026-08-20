@@ -1,3 +1,9 @@
+
+test_that("LogNormal default arguments", {
+  expect_identical(formals(LogNormal),
+    as.pairlist(alist(log_mu = 0, log_sigma = 1)))
+})
+
 test_that("print.LogNormal works", {
   expect_output(print(LogNormal()), regexp = "LogNormal")
 })
@@ -162,4 +168,13 @@ test_that("named return values for LogNormal distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for LogNormal returns correct object", {
+  d <- LogNormal(c(0, 10), c(1, 1))
+  expect_silent(crps <- crps(d, 3))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
 })

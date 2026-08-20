@@ -166,9 +166,11 @@ Normal <- function(mu = 0, sigma = 1) {
   d
 }
 
+#' @importFrom rlang check_dots_used
 #' @export
 mean.Normal <- function(x, ...) {
-  rlang::check_dots_used()
+  check_dots_used()
+  if (!length(x)) return(numeric())
   setNames(x$mu, names(x))
 }
 
@@ -322,11 +324,14 @@ cdf.Normal <- function(d, x, drop = TRUE, elementwise = NULL, ...) {
 #'   `length(probs)` columns (if `drop = FALSE`). In case of a vectorized
 #'   distribution object, a matrix with `length(probs)` columns containing all
 #'   possible combinations.
-#' @export
 #'
 #' @family Normal distribution
 #'
+#' @importFrom rlang check_dots_used
+#' @export
 quantile.Normal <- function(x, probs, drop = TRUE, elementwise = NULL, ...) {
+  check_dots_used()
+  if (!length(x)) return(numeric())
   FUN <- function(at, d) qnorm(at, mean = d$mu, sd = d$sigma, ...)
   apply_dpqr(d = x, FUN = FUN, at = probs, type = "quantile", drop = drop, elementwise = elementwise)
 }
@@ -378,7 +383,6 @@ suff_stat.Normal <- function(d, x, ...) {
 #'
 #' @export
 support.Normal <- function(d, drop = TRUE, ...) {
-  rlang::check_dots_used()
   min <- rep(-Inf, length(d))
   max <- rep(Inf, length(d))
   make_support(min, max, d, drop = drop)
@@ -386,12 +390,89 @@ support.Normal <- function(d, drop = TRUE, ...) {
 
 #' @exportS3Method
 is_discrete.Normal <- function(d, ...) {
-  rlang::check_dots_used()
   setNames(rep.int(FALSE, length(d)), names(d))
 }
 
 #' @exportS3Method
 is_continuous.Normal <- function(d, ...) {
-  rlang::check_dots_used()
   setNames(rep.int(TRUE, length(d)), names(d))
+}
+
+
+# ---------------------------------------------------------------------------
+# Normal: methods for score/hessian (documented on ?score-hessian for now)
+# ---------------------------------------------------------------------------
+
+#' @rdname score-hessian
+#' @name score-hessian
+#' @usage NULL
+#' @exportS3Method
+score.Normal <- function(d, x, which = NULL, drop = TRUE, ...) {
+  ## sanity check
+  n <- c(length(d), length(x))
+  if (n[1L] != n[2L] && all(n > 1L)) stop("'d' and 'x' must have length 1 or the same length")
+
+  ## available and selected parameters
+  p <- c("mu", "sigma")
+  if (is.null(which)) which <- p
+  which <- match.arg(which, p, several.ok = TRUE)
+
+  ## compute scores
+  scr <- function(par) switch(par,
+    "mu"    = (x - d$mu)/(d$sigma^2),
+    "sigma" = (x - d$mu)^2/(d$sigma^3) - 1/d$sigma)
+
+  ## if possible return single vector, otherwise collect in matrix
+  if (drop && length(which) == 1L) {
+    s <- setNames(scr(which), names(d))
+  } else {
+    s <- lapply(which, scr)
+    s <- do.call("cbind", s)
+    dimnames(s) <- list(names(d), which)
+  }
+  return(s)
+}
+
+#' @rdname score-hessian
+#' @name score-hessian
+#' @usage NULL
+#' @exportS3Method
+hessian.Normal <- function(d, x, which = NULL, drop = TRUE, expected = FALSE, ...) {
+  ## sanity check
+  n <- c(length(d), length(x))
+  if (n[1L] != n[2L] && all(n > 1L)) stop("'d' and 'x' must have length 1 or the same length")
+  n <- max(n)
+
+  ## available and selected parameters/combinations and mappings for symmetries
+  p <- c("mu" = "mu", "sigma:mu" = "mu:sigma", "mu:sigma" = "mu:sigma", "sigma" = "sigma")
+  if (is.null(which)) which <- names(p)
+
+  ## which combinations need to be computed?
+  which <- match.arg(which, names(p), several.ok = TRUE)
+  w <- unique(p[which])
+
+  ## function for computing Hessian elements (expected or observed)
+  hess <- if (expected) {
+    function(par) switch(par,
+      "mu"    = rep_len(-1 / d$sigma^2, n),
+      "sigma" = rep_len(-2 / d$sigma^2, n),
+      rep.int(0, n))
+  } else {
+    function(par) switch(par,
+      "mu"    = rep_len(-1 / d$sigma^2, n),
+      "sigma" = -3 * (x - d$mu)^2 / d$sigma^4 + 1/d$sigma^2,
+      -2 * (x - d$mu) / d$sigma^3)
+  }
+
+  ## if possible return single vector, otherwise collect in matrix
+  if (drop && length(which) == 1L) {
+    h <- setNames(hess(w), names(d))
+  } else {
+    h <- lapply(w, hess)
+    h <- do.call("cbind", h)
+    dimnames(h) <- list(names(d), w)
+    if (!identical(w, which)) h <- h[, p[which], drop = FALSE]
+    colnames(h) <- which
+  }
+  return(h)
 }

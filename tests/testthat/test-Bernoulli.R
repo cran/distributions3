@@ -1,3 +1,9 @@
+
+test_that("Bernoulli default arguments", {
+  expect_identical(formals(Bernoulli),
+    as.pairlist(alist(p = 0.5)))
+})
+
 test_that("print.Bernoulli works", {
   expect_output(print(Bernoulli()), regexp = "Bernoulli")
 })
@@ -178,4 +184,67 @@ test_that("named return values for Bernoulli distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for Bernoulli returns correct object", {
+  d <- Bernoulli(c(0.2, 0.5))
+  expect_silent(crps <- crps(d, 0.8))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
+})
+
+test_that("score.Bernoulli works as expected", {
+    ns <- ls(getNamespace("distributions3"))
+    expect_true("score.Bernoulli" %in% ns, info = "score.Bernoulli not found in namespace")
+    expect_true(is.function(getS3method("score", "Bernoulli")), "score.Bernoulli is not a function")
+
+    x <- seq(0, 1, by = 0.2)
+
+    ## Checking defaults
+    expect_identical(formals(distributions3:::score.Bernoulli),
+        as.pairlist(alist(d =, x =, which = "p", drop = TRUE, ... =)))
+
+    ## Testing for error when lenghts mismatch and incorrect arguments
+    expect_error(score(Bernoulli(c(0.2, 0.3, 0.5)), x),  regexp = "'d' and 'x' must have length 1 or the same length")
+    expect_error(score(Bernoulli(), 1, which = 1),       info = "unknown which should throw error")
+    expect_error(score(Bernoulli(), 1, which = "foo"),   info = "unknown which must should throw error")
+    expect_error(score(Bernoulli(), 1, drop = "foo"),    info = "non-logical drop should throw error")
+
+    ## Calculating all scores for 5 distributions w/ drop = TRUE (default) and FALSE
+    tmp <- (x - 0.5) / (0.5^2) # Score for p = 0.5
+    expect_silent(s1 <- score(Bernoulli(0.5), x))
+    expect_identical(s1, tmp)
+    expect_silent(s1 <- score(Bernoulli(0.5), x, which = "p", drop = FALSE))
+    expect_identical(s1, cbind(p = tmp))
+})
+
+test_that("hessian.Bernoulli works as expected", {
+    ns <- ls(getNamespace("distributions3"))
+    expect_true("hessian.Bernoulli" %in% ns, info = "hessian.Bernoulli not found in namespace")
+    expect_true(is.function(getS3method("hessian", "Bernoulli")), "hessian.Bernoulli is not a function")
+
+    x <- seq(0, 1, by = 0.2)
+
+    ## Checking defaults
+    expect_identical(formals(distributions3:::hessian.Bernoulli),
+        as.pairlist(alist(d =, x =, which = "p", drop = TRUE, expected = FALSE, ... =)))
+
+    ## Testing for error when lenghts mismatch and  incorrect arguments
+    expect_error(hessian(Bernoulli(c(0.2, 0.3, 0.5)), x),   regexp = "'d' and 'x' must have length 1 or the same length")
+    expect_error(hessian(Bernoulli(), 1, which = 1),        info = "unknown which should throw error")
+    expect_error(hessian(Bernoulli(), 1, which = "foo"),    info = "unknown which must should throw error")
+    expect_error(hessian(Bernoulli(), 1, drop = "foo"),     info = "non-logical drop should throw error")
+    expect_error(hessian(Bernoulli(), 1, expected = "foo"), info = "expected not TRUE/FALSE shuld throw error")
+
+    ## Calculating observed hessian and check return
+    tmp_o <- -x / 0.5^2 - (1 - x) / (1 - 0.5)^2 # Observed hessian for p = 0.5
+    expect_identical(hessian(Bernoulli(0.5), x, expected = FALSE), tmp_o, info = "incorrect observed hessian returned")
+    expect_identical(hessian(Bernoulli(0.5), x, expected = FALSE, drop = FALSE), cbind(p = tmp_o))
+
+    ## Calculating expected hessian and check return
+    tmp_e <- rep(-1 / 0.5^2, 6L) # Expected hessian for p = 0.5
+    expect_identical(hessian(Bernoulli(0.5), x, expected = TRUE),  tmp_e, info = "incorrect expected hessian returned")
+    expect_identical(hessian(Bernoulli(0.5), x, expected = TRUE, drop = FALSE),  cbind(p = tmp_e))
 })

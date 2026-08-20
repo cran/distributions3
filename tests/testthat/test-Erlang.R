@@ -2,6 +2,12 @@
 #
 # The Erlang distribution is a special case of the gamma distribution wherein
 # the shape (k) of the distribution is discretised.
+
+test_that("Erlang default arguments", {
+  expect_identical(formals(Erlang),
+    as.pairlist(alist(k = numeric(), lambda = numeric())))
+})
+
 e <- Erlang(k = 3, lambda = 0.5)
 
 test_that("Erlang constructor works", {
@@ -151,4 +157,13 @@ test_that("named return values for Erlang distribution work correctly", {
   expect_equal(names(support(d[1])), c("min", "max"))
   expect_equal(colnames(support(d)), c("min", "max"))
   expect_equal(rownames(support(d)), LETTERS[1:length(d)])
+})
+
+suppressPackageStartupMessages(library("scoringRules"))
+test_that("crps method for Binomial returns correct object", {
+  d <- Erlang(3, c(0.5, 0.8))
+  expect_silent(crps <- crps(d, 0.3))
+  expect_type(crps, "double")
+  expect_true(is.vector(crps))
+  expect_true(!all(is.na(crps)) & all(crps >= 0))
 })
